@@ -1,8 +1,7 @@
 .settings {
-  padding: 1.5rem;
-  max-width: 600px;
+  padding: 1.25rem 1rem 5rem;
+  max-width: 32rem;
   margin: 0 auto;
-  padding-bottom: 5rem;
 }
 
 .header {

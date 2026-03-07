@@ -21,6 +21,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  overscroll-behavior: none;
 }
 
 body {
@@ -30,6 +31,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-synthesis: none;
+  overscroll-behavior: none;
 
   /* Consume theme tokens */
   font-family: var(--font-body, sans-serif);
@@ -97,6 +99,36 @@ ol {
 #root {
   min-height: 100vh;
   isolation: isolate;
+}
+
+/* --- Theme Transition (smooth color switch) --- */
+
+[data-theme] {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+[data-theme] *:not([class*="modal"]):not([class*="backdrop"]) {
+  transition-property: background-color, color, border-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* --- iOS Input Zoom Prevention --- */
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+  font-size: 16px !important;
 }
 
 /* --- Base Typography Scale --- */

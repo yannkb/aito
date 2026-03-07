@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute } from '@tanstack/react-router'
 import { useTheme } from '../context/ThemeContext'
+import { PWAUpdatePrompt } from '../components/PWAUpdatePrompt'
 import '../styles/navigation.css'
 
 export const Route = createRootRoute({
@@ -15,7 +16,9 @@ function RootComponent() {
       <div className="app-content">
         <Outlet />
       </div>
-      
+
+      <PWAUpdatePrompt />
+
       <nav className="bottom-nav">
         <Link to="/" className="nav-item" activeProps={{ className: 'active' }}>
           <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -24,7 +27,7 @@ function RootComponent() {
           </svg>
           <span className="nav-label">Program</span>
         </Link>
-        
+
         <Link to="/settings" className="nav-item" activeProps={{ className: 'active' }}>
           <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="3" />

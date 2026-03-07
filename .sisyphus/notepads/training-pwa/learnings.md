@@ -141,3 +141,47 @@
 - Scenario 3 (Edit exercise): Pre-filled values correct, reps changed to "8-10" ✓
 - Scenario 4 (Delete exercise): Skull Crushers removed, back to 6 cards ✓
 - Scenario 5 (Persistence): "4 × 8-10" survived navigation away and back ✓
+
+# Task 14 Learnings: Mobile UX Polish & iOS PWA Fixes
+
+## Date: 2026-03-07
+
+## Critical Bug Found
+- `navigation.css` used completely wrong CSS variable names (`--surface-base`, `--border-subtle`, `--text-secondary`, `--accent-primary`) that didn't match the theme token system (`--color-surface`, `--color-border`, `--color-text-secondary`, `--color-primary`)
+- Bottom nav was invisible/unstyled as a result — complete rewrite fixed it
+- Lesson: Always verify CSS variable names match the actual theme token definitions
+
+## iOS PWA Fixes
+- `overscroll-behavior: none` on html/body prevents rubber-band bounce in standalone PWA mode
+- Safe area insets via `env(safe-area-inset-*)` needed on: `.app-content` (top), `.bottom-nav` (bottom), Modal panel (bottom)
+- `font-size: 16px !important` on all input/select/textarea prevents iOS Safari zoom-on-focus
+- Input components already had `font-size: 1rem` but added global `!important` rule as safety net
+
+## PWA Update Prompt
+- `useRegisterSW` from `virtual:pwa-register/react` provides `needRefresh`, `updateServiceWorker`, `offlineReady`
+- vite-plugin-pwa was already configured with `registerType: 'prompt'` in vite.config.ts
+- Polling for updates: `registration.update()` called every hour via setInterval
+- Toast-style notification at bottom of screen with Update/Dismiss buttons
+
+## CSS Micro-Interactions
+- Theme transition: `transition: background-color 0.2s ease, color 0.2s ease` on `[data-theme]` selector
+- Wildcard `[data-theme] *` transition for `border-color` catches all child elements
+- Modal fade-out: Required `[visible, setVisible]` + `[closing, setClosing]` state pair
+  - When `open` goes false while `visible` is true: set closing=true, setTimeout 200ms, then visible=false
+  - CSS: `.backdropClosing` fadeOut + `.panelClosing` slideDown+scaleOut animations
+- Nav item `:active` scale(0.95) for tactile feedback
+
+## Touch Target Compliance
+- `editHeaderButton` in day detail was only 36px — fixed to 44px min-height/min-width
+- ThemeToggle button lacked min-height: 44px — fixed
+- All inputs already had min-height: 44px from Task 9 ✓
+
+## QA Results
+- Scenario 1 (iPhone SE 375px): All pages render, no horizontal scroll, all elements visible ✓
+- Scenario 2 (Input font-size 390px): All inputs 16px font-size, ≥44px height, no horizontal scroll ✓
+- Scenario 3 (Theme transition): 0.2s CSS transition confirmed, colors update correctly ✓
+
+## Evidence Files
+- `task-14-iphone-se-home.png`, `task-14-iphone-se-detail.png`, `task-14-iphone-se-modal.png`, `task-14-iphone-se-settings.png`
+- `task-14-input-fontsize.txt`
+- `task-14-theme-before.png`, `task-14-theme-after.png`, `task-14-theme-transition.txt`

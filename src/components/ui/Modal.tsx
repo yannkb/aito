@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
 import styles from './Modal.module.css'
 
@@ -12,6 +12,22 @@ interface ModalProps {
 export function Modal({ open, onClose, title, children }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const [visible, setVisible] = useState(false)
+  const [closing, setClosing] = useState(false)
+
+  useEffect(() => {
+    if (open) {
+      setVisible(true)
+      setClosing(false)
+    } else if (visible) {
+      setClosing(true)
+      const timer = setTimeout(() => {
+        setVisible(false)
+        setClosing(false)
+      }, 200)
+      return () => clearTimeout(timer)
+    }
+  }, [open, visible])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -67,7 +83,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     }
   }, [open, handleKeyDown])
 
-  if (!open) return null
+  if (!visible) return null
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -75,15 +91,23 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     }
   }
 
+  const backdropClass = closing
+    ? `${styles.backdrop} ${styles.backdropClosing}`
+    : styles.backdrop
+
+  const panelClass = closing
+    ? `${styles.panel} ${styles.panelClosing}`
+    : styles.panel
+
   return (
     <div
-      className={styles.backdrop}
+      className={backdropClass}
       onClick={handleBackdropClick}
       role="presentation"
     >
       <div
         ref={panelRef}
-        className={styles.panel}
+        className={panelClass}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"

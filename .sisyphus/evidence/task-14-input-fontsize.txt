@@ -1,0 +1,22 @@
+QA Scenario 2: Input Font-Size Verification at 390x844 (iPhone 14)
+===================================================================
+Date: 2026-03-07
+Viewport: 390x844
+
+Page: /day/default-monday (Add Exercise modal open)
+
+Input Elements Evaluated:
+1. INPUT[text] "Exercise Name" — fontSize: 16px, minHeight: 44px, height: 44.39px ✅
+2. INPUT[number] "Sets"          — fontSize: 16px, minHeight: 44px, height: 44.39px ✅
+3. INPUT[text] "Reps"            — fontSize: 16px, minHeight: 44px, height: 44.39px ✅
+4. TEXTAREA "Notes"              — fontSize: 16px, minHeight: 80px, height: 89.17px ✅
+
+Horizontal Scroll Check:
+- scrollWidth: 390px
+- clientWidth: 390px
+- hasHorizontalScroll: false ✅
+
+Result: ALL PASS
+- All inputs have font-size >= 16px (prevents iOS zoom on focus)
+- All inputs have min-height >= 44px (meets touch target requirement)
+- No horizontal scroll at 390px viewport width
