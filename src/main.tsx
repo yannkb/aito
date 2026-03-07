@@ -5,11 +5,14 @@ import './styles/themes/dark-gym.css'
 import './styles/themes/polynesian.css'
 import App from './App.tsx'
 import { ProgramProvider } from './context/ProgramContext.tsx'
+import { ThemeProvider } from './context/ThemeContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ProgramProvider>
-      <App />
-    </ProgramProvider>
+    <ThemeProvider>
+      <ProgramProvider>
+        <App />
+      </ProgramProvider>
+    </ThemeProvider>
   </StrictMode>,
 )

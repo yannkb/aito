@@ -1,4 +1,5 @@
 import { Outlet, Link, createRootRoute } from '@tanstack/react-router'
+import { useTheme } from '../context/ThemeContext'
 import '../styles/navigation.css'
 
 export const Route = createRootRoute({
@@ -8,8 +9,9 @@ export const Route = createRootRoute({
 RootComponent.displayName = 'RootComponent'
 
 function RootComponent() {
+  const { theme } = useTheme()
   return (
-    <div className="app-root" data-theme="dark-gym">
+    <div className="app-root" data-theme={theme}>
       <div className="app-content">
         <Outlet />
       </div>
