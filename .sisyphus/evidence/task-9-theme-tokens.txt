@@ -1,0 +1,24 @@
+=== QA Scenario: Components use theme variables ===
+Date: 2026-03-07T10:46:30-10:00
+
+--- Check for hardcoded hex colors in .module.css files ---
+Search pattern: #[0-9a-fA-F]{3,8}
+Result: PASS — No hardcoded hex colors found
+
+--- Check for inline styles in .tsx files ---
+Search pattern: style={
+Result: PASS — No inline styles found
+
+--- Verify var(--color-*) usage across all .module.css ---
+CSS variable references found:
+src/components/ui/Button.module.css:22
+src/components/ui/Card.module.css:8
+src/components/ui/IconButton.module.css:11
+src/components/ui/Input.module.css:14
+src/components/ui/Modal.module.css:12
+src/components/ui/Select.module.css:14
+
+--- Summary ---
+All colors derived from CSS custom properties (theme tokens)
+No inline styles in component .tsx files
+OVERALL: PASS

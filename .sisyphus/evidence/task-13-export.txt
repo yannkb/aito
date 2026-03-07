@@ -1,0 +1,18 @@
+QA Scenario 1: Export downloads valid JSON
+
+Test Steps:
+1. Navigate to /settings
+2. Click "Export Program" button
+3. Verify download triggered
+4. Verify filename format
+5. Verify JSON structure
+
+Results:
+✅ Export button clicked successfully
+✅ Download triggered
+✅ Filename: training-program-2026-03-07.json (matches format: training-program-YYYY-MM-DD.json)
+✅ JSON is valid and parseable
+✅ Days array present with 7 items
+✅ Each day has required fields: id, name, sessionName, sessionType, exercises
+
+Conclusion: Export functionality works correctly.
