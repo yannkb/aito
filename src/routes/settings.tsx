@@ -1,5 +1,14 @@
 import { createRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './__root'
+import { useState, useRef } from 'react'
+import { ThemeToggle } from '../components/ThemeToggle'
+import { Button } from '../components/ui/Button'
+import { Card } from '../components/ui/Card'
+import { Modal } from '../components/ui/Modal'
+import { useProgram, useProgramDispatch } from '../context/ProgramContext'
+import { exportProgram } from '../utils/export'
+import { importProgram } from '../utils/import'
+import styles from '../styles/settings.module.css'
 
 export const Route = createRoute({
   getParentRoute: () => rootRoute,
@@ -8,13 +17,151 @@ export const Route = createRoute({
 })
 
 function SettingsComponent() {
+  const program = useProgram()
+  const dispatch = useProgramDispatch()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const [showImportConfirm, setShowImportConfirm] = useState(false)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  const handleExport = () => {
+    try {
+      exportProgram(program)
+      setSuccessMessage('Program exported successfully!')
+      setErrorMessage(null)
+      setTimeout(() => setSuccessMessage(null), 3000)
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Failed to export program'
+      )
+      setSuccessMessage(null)
+    }
+  }
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setPendingFile(file)
+      setShowImportConfirm(true)
+      setErrorMessage(null)
+      setSuccessMessage(null)
+    }
+    e.target.value = ''
+  }
+
+  const handleImportConfirm = async () => {
+    if (!pendingFile) return
+
+    try {
+      const importedProgram = await importProgram(pendingFile)
+      dispatch({ type: 'IMPORT_PROGRAM', payload: importedProgram })
+      setSuccessMessage('Program imported successfully!')
+      setErrorMessage(null)
+      setShowImportConfirm(false)
+      setPendingFile(null)
+      setTimeout(() => setSuccessMessage(null), 3000)
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Failed to import program'
+      )
+      setSuccessMessage(null)
+      setShowImportConfirm(false)
+      setPendingFile(null)
+    }
+  }
+
+  const handleImportCancel = () => {
+    setShowImportConfirm(false)
+    setPendingFile(null)
+  }
+
   return (
-    <div className="route-placeholder">
-      <h1>Settings</h1>
-      <p>Coming Soon</p>
-      <p className="route-description">
-        This will contain theme selection, data management, and app preferences.
-      </p>
+    <div className={styles.settings}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Settings</h1>
+        <p className={styles.subtitle}>
+          Customize your training app experience
+        </p>
+      </div>
+
+      <Card className={styles.section}>
+        <h2 className={styles.sectionTitle}>Theme</h2>
+        <div className={styles.themeSection}>
+          <p className={styles.themeLabel}>
+            Choose your preferred theme
+          </p>
+          <ThemeToggle />
+        </div>
+      </Card>
+
+      <Card className={styles.section}>
+        <h2 className={styles.sectionTitle}>Export Program</h2>
+        <div className={styles.exportSection}>
+          <p className={styles.description}>
+            Download your current training program as a JSON file. This creates
+            a backup you can import later or share with others.
+          </p>
+          <div className={styles.buttonGroup}>
+            <Button onClick={handleExport}>Export Program</Button>
+          </div>
+        </div>
+      </Card>
+
+      <Card className={styles.section}>
+        <h2 className={styles.sectionTitle}>Import Program</h2>
+        <div className={styles.importSection}>
+          <p className={styles.description}>
+            Load a training program from a JSON file. This will replace your
+            current program with the imported one.
+          </p>
+          <div className={styles.buttonGroup}>
+            <Button variant="secondary" onClick={handleImportClick}>
+              Import Program
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileSelect}
+              className={styles.fileInput}
+              aria-label="Select JSON file to import"
+            />
+          </div>
+        </div>
+      </Card>
+
+      {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
+      {successMessage && <p className={styles.successText}>{successMessage}</p>}
+
+      <div className={styles.aboutSection}>
+        <h2 className={styles.appName}>Training PWA</h2>
+        <p className={styles.appDescription}>
+          Gymbro × ʻOri Tahiti
+        </p>
+        <p className={styles.version}>Version 0.0.0</p>
+      </div>
+
+      <Modal
+        open={showImportConfirm}
+        onClose={handleImportCancel}
+        title="Import Program"
+      >
+        <p className={styles.modalText}>
+          This will replace your current program. Continue?
+        </p>
+        <div className={styles.modalActions}>
+          <Button variant="secondary" onClick={handleImportCancel}>
+            Cancel
+          </Button>
+          <Button onClick={handleImportConfirm}>Import</Button>
+        </div>
+      </Modal>
     </div>
   )
 }
