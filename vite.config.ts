@@ -4,6 +4,12 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Base path for GitHub Pages deployment
+  // For user sites (username.github.io): use '/'
+  // For project sites (username.github.io/repo-name): use '/repo-name/'
+  // Can be overridden via BASE_URL environment variable
+  base: process.env.BASE_URL || '/',
+  
   plugins: [
     react(),
     VitePWA({
@@ -15,8 +21,8 @@ export default defineConfig({
         theme_color: '#1a1a1a',
         background_color: '#ffffff',
         display: 'standalone',
-        scope: '/',
-        start_url: '/',
+        scope: process.env.BASE_URL || '/',
+        start_url: process.env.BASE_URL || '/',
         icons: [
           {
             src: '/pwa-192x192.png',
