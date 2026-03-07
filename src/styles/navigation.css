@@ -1,0 +1,127 @@
+/* Mobile-First Bottom Navigation */
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px; /* Space for bottom nav */
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--surface-base);
+  border-top: 1px solid var(--border-subtle);
+  padding: 12px 0;
+  height: 72px;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  border-radius: 12px;
+  min-width: 80px;
+}
+
+.nav-item:hover {
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+}
+
+.nav-item.active {
+  color: var(--accent-primary);
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease;
+}
+
+.nav-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Route Placeholder Styles */
+.route-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+  text-align: center;
+}
+
+.route-placeholder h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.route-placeholder p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin: 8px 0;
+}
+
+.route-description {
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.route-description strong {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* Tablet and Desktop - Optional Enhancement */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: static;
+    border-top: none;
+    border-bottom: 1px solid var(--border-subtle);
+    height: 64px;
+  }
+  
+  .app-content {
+    padding-bottom: 0;
+  }
+  
+  .nav-item {
+    flex-direction: row;
+    gap: 8px;
+  }
+  
+  .nav-label {
+    font-size: 14px;
+  }
+}
