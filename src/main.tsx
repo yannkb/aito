@@ -4,9 +4,12 @@ import './styles/global.css'
 import './styles/themes/dark-gym.css'
 import './styles/themes/polynesian.css'
 import App from './App.tsx'
+import { ProgramProvider } from './context/ProgramContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ProgramProvider>
+      <App />
+    </ProgramProvider>
   </StrictMode>,
 )
