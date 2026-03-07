@@ -1,0 +1,66 @@
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+
+  background-color: transparent;
+  color: var(--color-text-secondary);
+
+  font-size: 1.125rem;
+  line-height: 1;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.iconButton:hover {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text);
+}
+
+.iconButton:active {
+  transform: scale(0.9);
+}
+
+.iconButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.danger {
+  color: var(--color-danger);
+}
+
+.danger:hover {
+  background-color: var(--color-danger-muted);
+  color: var(--color-danger);
+}
+
+.primary {
+  color: var(--color-primary);
+}
+
+.primary:hover {
+  background-color: var(--color-primary-muted);
+  color: var(--color-primary);
+}
+
+.rounded {
+  border-radius: var(--radius-full);
+}

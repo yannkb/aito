@@ -1,0 +1,116 @@
+/* ============================================================
+   Button — Primary interaction element
+   Training PWA · Mobile-first · Touch-friendly
+   ============================================================ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Variants --- */
+
+.primary {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border-color: var(--color-primary);
+}
+
+.primary:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-glow);
+}
+
+.primary:focus-visible {
+  box-shadow: var(--shadow-glow), 0 0 0 3px var(--color-primary-muted);
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.secondary:hover {
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-text-secondary);
+}
+
+.secondary:focus-visible {
+  border-color: var(--color-primary);
+}
+
+.danger {
+  background-color: var(--color-danger-muted);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.danger:hover {
+  background-color: var(--color-danger);
+  color: var(--color-bg);
+  box-shadow: 0 0 16px var(--color-danger-muted);
+}
+
+.danger:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-danger-muted);
+}
+
+/* --- Sizes --- */
+
+.sm {
+  min-height: 44px;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.8125rem;
+  border-radius: var(--radius-sm);
+}
+
+.lg {
+  min-height: 52px;
+  padding: 0.75rem 1.75rem;
+  font-size: 1rem;
+}
+
+/* --- Full width --- */
+
+.fullWidth {
+  width: 100%;
+}
