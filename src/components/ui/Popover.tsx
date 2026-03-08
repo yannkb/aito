@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import type { ReactNode } from 'react'
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
+import { createPortal } from 'react-dom'
+import type { ReactNode, CSSProperties } from 'react'
 import styles from './Popover.module.css'
 
 interface PopoverItem {
@@ -19,13 +20,16 @@ interface PopoverProps {
 export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [coords, setCoords] = useState<CSSProperties | null>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const close = useCallback(() => {
     setClosing(true)
     const timer = setTimeout(() => {
       setOpen(false)
       setClosing(false)
+      setCoords(null)
     }, 120)
     return () => clearTimeout(timer)
   }, [])
@@ -45,30 +49,55 @@ export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
     close()
   }
 
+  useLayoutEffect(() => {
+    if (!open || closing || !triggerRef.current || !menuRef.current) return
+
+    const triggerRect = triggerRef.current.getBoundingClientRect()
+    const menuHeight = menuRef.current.offsetHeight
+    const gap = 6
+
+    const spaceBelow = window.innerHeight - triggerRect.bottom
+    const fitsBelow = spaceBelow >= menuHeight + gap
+    const fitsAbove = triggerRect.top >= menuHeight + gap
+
+    const top = !fitsBelow && fitsAbove
+      ? triggerRect.top - menuHeight - gap
+      : triggerRect.bottom + gap
+
+    if (align === 'right') {
+      setCoords({ top, right: window.innerWidth - triggerRect.right })
+    } else {
+      setCoords({ top, left: triggerRect.left })
+    }
+  }, [open, closing, align])
+
   useEffect(() => {
     if (!open) return
 
     const handleOutsideClick = (e: MouseEvent) => {
       if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        triggerRef.current?.contains(e.target as Node) ||
+        menuRef.current?.contains(e.target as Node)
       ) {
-        close()
+        return
       }
+      close()
     }
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        close()
-      }
+      if (e.key === 'Escape') close()
     }
+
+    const handleScroll = () => close()
 
     document.addEventListener('mousedown', handleOutsideClick)
     document.addEventListener('keydown', handleEscape)
+    window.addEventListener('scroll', handleScroll, true)
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick)
       document.removeEventListener('keydown', handleEscape)
+      window.removeEventListener('scroll', handleScroll, true)
     }
   }, [open, close])
 
@@ -80,39 +109,50 @@ export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
     .filter(Boolean)
     .join(' ')
 
-  return (
-    <div ref={wrapperRef} className={styles.wrapper}>
-      <div onClick={toggle} role="presentation">
-        {trigger}
-      </div>
-      {open && (
-        <div className={menuClasses} role="menu">
-          {items.map((item, index) => {
-            const itemClasses = [
-              styles.item,
-              item.variant === 'danger' ? styles.itemDanger : '',
-              item.disabled ? styles.itemDisabled : '',
-            ]
-              .filter(Boolean)
-              .join(' ')
+  const menuStyle: CSSProperties = coords ?? { opacity: 0, pointerEvents: 'none' }
 
-            return (
-              <button
-                key={index}
-                type="button"
-                className={itemClasses}
-                role="menuitem"
-                disabled={item.disabled}
-                aria-disabled={item.disabled}
-                onClick={() => handleItemClick(item)}
-              >
-                <span className={styles.icon}>{item.icon}</span>
-                <span className={styles.label}>{item.label}</span>
-              </button>
-            )
-          })}
+  return (
+    <>
+      <div ref={triggerRef} className={styles.wrapper}>
+        <div onClick={toggle} role="presentation">
+          {trigger}
         </div>
-      )}
-    </div>
+      </div>
+      {open &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className={menuClasses}
+            role="menu"
+            style={menuStyle}
+          >
+            {items.map((item, index) => {
+              const itemClasses = [
+                styles.item,
+                item.variant === 'danger' ? styles.itemDanger : '',
+                item.disabled ? styles.itemDisabled : '',
+              ]
+                .filter(Boolean)
+                .join(' ')
+
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  className={itemClasses}
+                  role="menuitem"
+                  disabled={item.disabled}
+                  aria-disabled={item.disabled}
+                  onClick={() => handleItemClick(item)}
+                >
+                  <span className={styles.icon}>{item.icon}</span>
+                  <span className={styles.label}>{item.label}</span>
+                </button>
+              )
+            })}
+          </div>,
+          document.body
+        )}
+    </>
   )
 }
