@@ -20,7 +20,7 @@ type ProgramAction =
       type: 'UPDATE_DAY';
       payload: {
         dayId: string;
-        updates: Partial<Pick<Day, 'name' | 'sessionName' | 'sessionType'>>;
+        updates: Partial<Pick<Day, 'name' | 'sessionName' | 'sessionType' | 'notes'>>;
       };
     }
   | { type: 'DELETE_DAY'; payload: { dayId: string } }

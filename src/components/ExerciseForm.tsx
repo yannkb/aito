@@ -2,6 +2,8 @@ import { useState } from 'react'
 import type { Exercise } from '../types/program'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
+import { exerciseTemplates } from '../data/exerciseTemplates'
+import type { ExerciseTemplate } from '../data/exerciseTemplates'
 import styles from './ExerciseForm.module.css'
 
 interface ExerciseFormData {
@@ -17,12 +19,28 @@ interface ExerciseFormProps {
   onCancel: () => void
 }
 
+const CATEGORIES: ExerciseTemplate['category'][] = ['mobility', 'conditioning', 'gym']
+
+const CATEGORY_LABELS: Record<ExerciseTemplate['category'], string> = {
+  mobility: 'Mobility',
+  conditioning: 'Conditioning',
+  gym: 'Gym',
+}
+
 export function ExerciseForm({ exercise, onSubmit, onCancel }: ExerciseFormProps) {
   const [name, setName] = useState(exercise?.name ?? '')
   const [sets, setSets] = useState(exercise ? String(exercise.sets) : '3')
   const [reps, setReps] = useState(exercise?.reps ?? '')
   const [notes, setNotes] = useState(exercise?.notes ?? '')
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  function applyTemplate(template: ExerciseTemplate) {
+    setName(template.name)
+    setSets(String(template.sets))
+    setReps(template.reps)
+    setNotes(template.notes ?? '')
+    setErrors({})
+  }
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {}
@@ -48,6 +66,30 @@ export function ExerciseForm({ exercise, onSubmit, onCancel }: ExerciseFormProps
 
   return (
     <div className={styles.formStack}>
+      {exercise === null && (
+        <div className={styles.templateSection}>
+          {CATEGORIES.map((category) => {
+            const templates = exerciseTemplates.filter((t) => t.category === category)
+            return (
+              <div key={category}>
+                <p className={styles.templateCategory}>{CATEGORY_LABELS[category]}</p>
+                <div className={styles.templateGrid}>
+                  {templates.map((template) => (
+                    <button
+                      key={`${template.category}-${template.name}`}
+                      type="button"
+                      className={styles.templateChip}
+                      onClick={() => applyTemplate(template)}
+                    >
+                      {template.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
       <Input
         label="Exercise Name"
         value={name}

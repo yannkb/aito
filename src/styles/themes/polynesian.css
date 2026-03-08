@@ -35,4 +35,13 @@
   --color-neutral-muted: rgba(60, 36, 21, 0.08);
   --exercise-image-filter: none;
   --color-backdrop: rgba(60, 36, 21, 0.4);
+
+  --color-accent-gym: #0B7A75;
+  --color-accent-gym-muted: rgba(11, 122, 117, 0.10);
+  --color-accent-dance: #F25C54;
+  --color-accent-dance-muted: rgba(242, 92, 84, 0.10);
+  --color-accent-cardio: #E5890A;
+  --color-accent-cardio-muted: rgba(229, 137, 10, 0.10);
+  --color-accent-rest: #8B7355;
+  --color-accent-rest-muted: rgba(60, 36, 21, 0.08);
 }

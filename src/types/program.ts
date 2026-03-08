@@ -8,6 +8,7 @@ export interface Day {
   sessionName: string; // "Push", "Ori Tahiti", "Rest / Mobility"
   sessionType: 'gym' | 'dance' | 'cardio' | 'rest';
   exercises: Exercise[];
+  notes?: string;
 }
 
 export interface Exercise {

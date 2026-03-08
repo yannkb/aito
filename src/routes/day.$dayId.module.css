@@ -54,6 +54,26 @@
   line-height: 1.4;
 }
 
+.sessionBadgeGym {
+  background-color: var(--color-accent-gym-muted);
+  color: var(--color-accent-gym);
+}
+
+.sessionBadgeDance {
+  background-color: var(--color-accent-dance-muted);
+  color: var(--color-accent-dance);
+}
+
+.sessionBadgeCardio {
+  background-color: var(--color-accent-cardio-muted);
+  color: var(--color-accent-cardio);
+}
+
+.sessionBadgeRest {
+  background-color: var(--color-accent-rest-muted);
+  color: var(--color-accent-rest);
+}
+
 /* --- Gym Section (Hevy link) --- */
 
 .gymSection {
@@ -212,4 +232,40 @@
 .editHeaderActions {
   display: flex;
   gap: 0.5rem;
+}
+
+/* --- Day Notes (display) --- */
+
+.dayNotes {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* --- Notes Textarea (edit form) --- */
+
+.notesWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.notesLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.notesTextarea {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  color: inherit;
+  font: inherit;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
 }

@@ -1,44 +1,78 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, use, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { STORAGE_KEYS } from '../constants/storage'
 
-type Theme = 'dark-gym' | 'polynesian'
+export type ThemeMode = 'auto' | 'dark-gym' | 'polynesian'
+export type Theme = 'dark-gym' | 'polynesian'
 
 interface ThemeContextType {
   theme: Theme
-  toggleTheme: () => void
-  setTheme: (theme: Theme) => void
+  mode: ThemeMode
+  setMode: (mode: ThemeMode) => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
+function getSystemTheme(): Theme {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark-gym'
+    : 'polynesian'
+}
+
+function resolveTheme(mode: ThemeMode): Theme {
+  if (mode === 'auto') return getSystemTheme()
+  return mode
+}
+
+function isValidMode(value: string | null): value is ThemeMode {
+  return value === 'auto' || value === 'dark-gym' || value === 'polynesian'
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
+  const [mode, setModeState] = useState<ThemeMode>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.THEME)
-    return stored === 'dark-gym' || stored === 'polynesian' ? stored : 'dark-gym'
+    return isValidMode(stored) ? stored : 'auto'
   })
 
+  const [resolvedTheme, setResolvedTheme] = useState<Theme>(() => resolveTheme(mode))
+
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem(STORAGE_KEYS.THEME, theme)
-  }, [theme])
+    setResolvedTheme(resolveTheme(mode))
+    localStorage.setItem(STORAGE_KEYS.THEME, mode)
+  }, [mode])
 
-  const toggleTheme = useCallback(() => {
-    setThemeState((prev) => (prev === 'dark-gym' ? 'polynesian' : 'dark-gym'))
-  }, [])
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', resolvedTheme)
+  }, [resolvedTheme])
 
-  const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme)
-  }, [])
+  useEffect(() => {
+    if (mode !== 'auto') return
 
-  const value = useMemo(() => ({ theme, toggleTheme, setTheme }), [theme, toggleTheme, setTheme])
+    const mql = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => {
+      setResolvedTheme(e.matches ? 'dark-gym' : 'polynesian')
+    }
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    mql.addEventListener('change', handler)
+    return () => {
+      mql.removeEventListener('change', handler)
+    }
+  }, [mode])
+
+  const setMode = useMemo(
+    () => (newMode: ThemeMode) => {
+      setModeState(newMode)
+    },
+    []
   )
+
+  const value = useMemo(
+    () => ({ theme: resolvedTheme, mode, setMode }),
+    [resolvedTheme, mode, setMode]
+  )
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
 export function useTheme() {

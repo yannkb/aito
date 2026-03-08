@@ -5,6 +5,27 @@
   align-items: center;
   gap: 0;
   overflow: visible;
+  animation: slideIn 0.25s ease backwards;
+}
+
+.dayCard:nth-child(1) { animation-delay: 0.02s; }
+.dayCard:nth-child(2) { animation-delay: 0.04s; }
+.dayCard:nth-child(3) { animation-delay: 0.06s; }
+.dayCard:nth-child(4) { animation-delay: 0.08s; }
+.dayCard:nth-child(5) { animation-delay: 0.1s; }
+.dayCard:nth-child(6) { animation-delay: 0.12s; }
+.dayCard:nth-child(7) { animation-delay: 0.14s; }
+.dayCard:nth-child(n+8) { animation-delay: 0.14s; }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dayCardToday .dayCardMain {

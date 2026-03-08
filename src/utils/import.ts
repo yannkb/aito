@@ -30,6 +30,8 @@ function isValidDay(day: unknown): day is Day {
     return false
   }
 
+  if (!(d.notes === undefined || typeof d.notes === 'string')) return false
+
   if (!Array.isArray(d.exercises)) return false
   
   return d.exercises.every(isValidExercise)

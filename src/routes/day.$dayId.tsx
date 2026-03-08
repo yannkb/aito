@@ -1,5 +1,5 @@
 import { createRoute, Link } from '@tanstack/react-router'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Route as rootRoute } from './__root'
 import { useProgram, useProgramDispatch } from '../context/ProgramContext'
 import { useToast } from '../context/ToastContext'
@@ -12,8 +12,15 @@ import { ExerciseCard } from '../components/ExerciseCard'
 import { ExerciseForm } from '../components/ExerciseForm'
 import { CopyExercisesModal } from '../components/CopyExercisesModal'
 import { EditIcon, BarbellIcon, ExternalLinkIcon } from '../components/icons'
-import type { Exercise } from '../types/program'
+import type { Day, Exercise } from '../types/program'
 import styles from './day.$dayId.module.css'
+
+const SESSION_BADGE_STYLES: Record<Day['sessionType'], string> = {
+  gym: styles.sessionBadgeGym,
+  dance: styles.sessionBadgeDance,
+  cardio: styles.sessionBadgeCardio,
+  rest: styles.sessionBadgeRest,
+}
 
 export const Route = createRoute({
   getParentRoute: () => rootRoute,
@@ -35,6 +42,7 @@ function DayDetailComponent() {
   const [editingHeader, setEditingHeader] = useState(false)
   const [headerName, setHeaderName] = useState('')
   const [headerSession, setHeaderSession] = useState('')
+  const [headerNotes, setHeaderNotes] = useState('')
 
   const openAddModal = useCallback(() => {
     setEditingExercise(null)
@@ -127,8 +135,21 @@ function DayDetailComponent() {
     if (!day) return
     setHeaderName(day.name)
     setHeaderSession(day.sessionName)
+    setHeaderNotes(day.notes ?? '')
     setEditingHeader(true)
   }, [day])
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'n' || e.metaKey || e.ctrlKey || e.altKey) return
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable) return
+      e.preventDefault()
+      openAddModal()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [openAddModal])
 
   const saveHeader = useCallback(() => {
     if (!day) return
@@ -140,11 +161,12 @@ function DayDetailComponent() {
         updates: {
           name: headerName.trim(),
           sessionName: headerSession.trim(),
+          notes: headerNotes.trim() || undefined,
         },
       },
     })
     setEditingHeader(false)
-  }, [day, headerName, headerSession, dispatch])
+  }, [day, headerName, headerSession, headerNotes, dispatch])
 
   if (!day) {
     return (
@@ -183,6 +205,17 @@ function DayDetailComponent() {
             required
             placeholder="e.g. Push"
           />
+          <div className={styles.notesWrapper}>
+            <label className={styles.notesLabel} htmlFor="day-notes">Notes</label>
+            <textarea
+              id="day-notes"
+              className={styles.notesTextarea}
+              value={headerNotes}
+              onChange={(e) => setHeaderNotes(e.target.value)}
+              placeholder="Optional notes for this day..."
+              rows={3}
+            />
+          </div>
           <div className={styles.editHeaderActions}>
             <Button size="sm" onClick={saveHeader}>Save</Button>
             <Button size="sm" variant="secondary" onClick={() => setEditingHeader(false)}>Cancel</Button>
@@ -202,7 +235,8 @@ function DayDetailComponent() {
               <EditIcon />
             </button>
           </div>
-          <span className={styles.sessionBadge}>{day.sessionName}</span>
+          <span className={`${styles.sessionBadge} ${SESSION_BADGE_STYLES[day.sessionType]}`}>{day.sessionName}</span>
+          {day.notes && <p className={styles.dayNotes}>{day.notes}</p>}
         </div>
       )}
 
