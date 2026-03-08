@@ -41,6 +41,7 @@ type ProgramAction =
     }
   | { type: 'MOVE_DAY_UP'; payload: { dayId: string } }
   | { type: 'MOVE_DAY_DOWN'; payload: { dayId: string } }
+  | { type: 'DUPLICATE_DAY'; payload: { dayId: string } }
   | { type: 'IMPORT_PROGRAM'; payload: Program };
 
 function programReducer(state: Program, action: ProgramAction): Program {
@@ -197,6 +198,33 @@ function programReducer(state: Program, action: ProgramAction): Program {
         newDays[dayIndex + 1],
         newDays[dayIndex],
       ];
+
+      return {
+        ...state,
+        days: newDays,
+      };
+    }
+
+    case 'DUPLICATE_DAY': {
+      const sourceDayIndex = state.days.findIndex(
+        (day) => day.id === action.payload.dayId
+      );
+      if (sourceDayIndex === -1) return state;
+
+      const sourceDay = state.days[sourceDayIndex];
+      const duplicatedDay: Day = {
+        id: `day-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        name: `${sourceDay.name} (copy)`,
+        sessionName: sourceDay.sessionName,
+        sessionType: sourceDay.sessionType,
+        exercises: sourceDay.exercises.map((ex) => ({
+          ...ex,
+          id: `ex-${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${Math.random().toString(36).slice(2, 5)}`,
+        })),
+      };
+
+      const newDays = [...state.days];
+      newDays.splice(sourceDayIndex + 1, 0, duplicatedDay);
 
       return {
         ...state,

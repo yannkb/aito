@@ -1,6 +1,7 @@
 import { Outlet, Link, createRootRoute } from '@tanstack/react-router'
 import { useTheme } from '../context/ThemeContext'
 import { PWAUpdatePrompt } from '../components/PWAUpdatePrompt'
+import { OfflineIndicator } from '../components/OfflineIndicator'
 import '../styles/navigation.css'
 
 export const Route = createRootRoute({
@@ -13,6 +14,7 @@ function RootComponent() {
   const { theme } = useTheme()
   return (
     <div className="app-root" data-theme={theme}>
+      <OfflineIndicator />
       <div className="app-content">
         <Outlet />
       </div>

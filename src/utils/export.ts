@@ -9,7 +9,7 @@ export function exportProgram(program: Program): void {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
-  const filename = `training-program-${year}-${month}-${day}.json`
+  const filename = `aito-${year}-${month}-${day}.json`
 
   const a = document.createElement('a')
   a.href = url

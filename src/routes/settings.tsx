@@ -26,6 +26,8 @@ function SettingsComponent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
+  const canShare = typeof navigator !== 'undefined' && !!navigator.share
+
   const handleExport = () => {
     try {
       exportProgram(program)
@@ -37,6 +39,28 @@ function SettingsComponent() {
         error instanceof Error ? error.message : 'Failed to export program'
       )
       setSuccessMessage(null)
+    }
+  }
+
+  const handleShare = async () => {
+    const json = JSON.stringify(program, null, 2)
+    const blob = new Blob([json], { type: 'application/json' })
+    const file = new File([blob], 'aito-program.json', { type: 'application/json' })
+
+    try {
+      await navigator.share({
+        title: 'Aito Training Program',
+        text: 'Check out my training program!',
+        files: [file],
+      })
+      setSuccessMessage('Program shared!')
+      setErrorMessage(null)
+      setTimeout(() => setSuccessMessage(null), 3000)
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        setErrorMessage('Sharing failed. Try exporting instead.')
+        setTimeout(() => setErrorMessage(null), 3000)
+      }
     }
   }
 
@@ -109,6 +133,11 @@ function SettingsComponent() {
           </p>
           <div className={styles.buttonGroup}>
             <Button onClick={handleExport}>Export Program</Button>
+            {canShare && (
+              <Button variant="secondary" onClick={handleShare}>
+                Share
+              </Button>
+            )}
           </div>
         </div>
       </Card>
@@ -144,7 +173,7 @@ function SettingsComponent() {
         <p className={styles.appDescription}>
           Ironwood Warrior — Gym × ʻOri Tahiti
         </p>
-        <p className={styles.version}>Version 0.0.0</p>
+        <p className={styles.version}>Version {__APP_VERSION__}</p>
       </div>
 
       <Modal
