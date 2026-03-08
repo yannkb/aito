@@ -23,6 +23,8 @@ function RootComponent() {
   const day = dayId ? program.days.find((d) => d.id === dayId) : null
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+
     if (pathname === '/settings') {
       document.title = 'Aito \u00b7 Settings'
     } else if (day) {

@@ -29,4 +29,6 @@
   --font-display: "Archivo Black", "Impact", sans-serif;
   --font-body: "DM Sans", "Helvetica Neue", sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --exercise-image-filter: invert(1);
 }

@@ -153,9 +153,9 @@
   flex-shrink: 0;
   border-radius: var(--radius);
   background-color: var(--color-surface-elevated);
-  color: var(--color-primary);
   padding: 4px;
   align-self: flex-start;
+  filter: var(--exercise-image-filter, none);
 }
 
 .exerciseName {
@@ -365,7 +365,7 @@
 }
 
 .exerciseCard {
-  animation: slideIn 0.25s ease both;
+  animation: slideIn 0.25s ease backwards;
 }
 
 .exerciseCard:nth-child(1) { animation-delay: 0.02s; }
