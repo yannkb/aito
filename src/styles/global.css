@@ -21,7 +21,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -31,7 +31,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-synthesis: none;
-  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 
   /* Consume theme tokens */
   font-family: var(--font-body, sans-serif);
