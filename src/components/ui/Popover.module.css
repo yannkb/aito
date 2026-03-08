@@ -1,0 +1,126 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  z-index: 50;
+  margin-top: 0.375rem;
+
+  min-width: 10rem;
+  padding: 0.375rem 0;
+
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+
+  animation: scaleIn 0.15s ease-out;
+}
+
+.menu.closing {
+  animation: scaleOut 0.12s ease forwards;
+}
+
+.alignRight {
+  right: 0;
+  transform-origin: top right;
+}
+
+.alignLeft {
+  left: 0;
+  transform-origin: top left;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  width: 100%;
+  min-height: 44px;
+  padding: 0.625rem 0.875rem;
+  border: none;
+  background-color: transparent;
+
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  text-align: left;
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.item:hover {
+  background-color: var(--color-surface);
+}
+
+.item:active {
+  transform: scale(0.98);
+}
+
+.itemDanger {
+  color: var(--color-danger);
+}
+
+.itemDanger:hover {
+  background-color: var(--color-danger-muted);
+}
+
+.itemDisabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+}
+
+.divider {
+  height: 1px;
+  margin: 0.375rem 0;
+  background-color: var(--color-border);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}

@@ -107,13 +107,6 @@ function SettingsComponent() {
 
   return (
     <div className={styles.settings}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>
-          Customize your training app experience
-        </p>
-      </div>
-
       <Card className={styles.section}>
         <h2 className={styles.sectionTitle}>Theme</h2>
         <div className={styles.themeSection}>

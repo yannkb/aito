@@ -13,56 +13,6 @@
   width: 100%;
 }
 
-/* --- Top Bar --- */
-
-.topBar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 0 0.5rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: var(--color-bg);
-}
-
-.backButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border: none;
-  border-radius: var(--radius);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-size: 1.25rem;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-}
-
-.backButton:hover {
-  background-color: var(--color-surface-elevated);
-}
-
-.backButton:active {
-  transform: scale(0.93);
-}
-
-.topBarTitle {
-  flex: 1;
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--color-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* --- Header (Day Name + Session Name) --- */
 
 .header {
@@ -344,6 +294,12 @@
   padding: 0.75rem 0;
   background: linear-gradient(to top, var(--color-bg) 60%, transparent);
   margin-top: auto;
+}
+
+.addBarButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 /* --- Form Layout --- */

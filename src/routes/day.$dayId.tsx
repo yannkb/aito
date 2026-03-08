@@ -2,9 +2,11 @@ import { createRoute, Link } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
 import { Route as rootRoute } from './__root'
 import { useProgram, useProgramDispatch } from '../context/ProgramContext'
+import { useToast } from '../context/ToastContext'
 import { Button } from '../components/ui/Button'
 import { Modal } from '../components/ui/Modal'
 import { Input } from '../components/ui/Input'
+import { Select } from '../components/ui/Select'
 import { IconButton } from '../components/ui/IconButton'
 import type { Exercise } from '../types/program'
 import styles from './day.$dayId.module.css'
@@ -19,12 +21,14 @@ function DayDetailComponent() {
   const { dayId } = Route.useParams()
   const program = useProgram()
   const dispatch = useProgramDispatch()
+  const { showToast } = useToast()
 
   const day = program.days.find((d) => d.id === dayId)
 
   const [exerciseModalOpen, setExerciseModalOpen] = useState(false)
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<Exercise | null>(null)
+  const [copyModalOpen, setCopyModalOpen] = useState(false)
+  const [copySourceDayId, setCopySourceDayId] = useState('')
   const [editingHeader, setEditingHeader] = useState(false)
   const [headerName, setHeaderName] = useState('')
   const [headerSession, setHeaderSession] = useState('')
@@ -105,14 +109,35 @@ function DayDetailComponent() {
     closeExerciseModal()
   }, [day, editingExercise, formName, formSets, formReps, formNotes, validateForm, dispatch, closeExerciseModal])
 
-  const handleDelete = useCallback(() => {
-    if (!day || !deleteTarget) return
+  const handleDeleteExercise = useCallback(
+    (exercise: Exercise) => {
+      if (!day) return
+      const snapshot = { ...program, days: [...program.days.map(d => ({ ...d, exercises: [...d.exercises] }))] }
+      dispatch({
+        type: 'DELETE_EXERCISE',
+        payload: { dayId: day.id, exerciseId: exercise.id },
+      })
+      showToast({
+        message: `${exercise.name} deleted`,
+        action: {
+          label: 'Undo',
+          onClick: () => dispatch({ type: 'LOAD_PROGRAM', payload: snapshot })
+        }
+      })
+    },
+    [day, program, dispatch, showToast]
+  )
+
+  const handleCopyExercises = useCallback(() => {
+    if (!day || !copySourceDayId) return
     dispatch({
-      type: 'DELETE_EXERCISE',
-      payload: { dayId: day.id, exerciseId: deleteTarget.id },
+      type: 'COPY_EXERCISES_FROM_DAY',
+      payload: { targetDayId: day.id, sourceDayId: copySourceDayId },
     })
-    setDeleteTarget(null)
-  }, [day, deleteTarget, dispatch])
+    setCopyModalOpen(false)
+    setCopySourceDayId('')
+    showToast({ message: 'Exercises copied', variant: 'success' })
+  }, [day, copySourceDayId, dispatch, showToast])
 
   const handleMoveUp = useCallback(
     (exerciseId: string) => {
@@ -162,13 +187,6 @@ function DayDetailComponent() {
   if (!day) {
     return (
       <div className={styles.page}>
-        <div className={styles.topBar}>
-          <Link to="/" className={styles.backButton} aria-label="Back to overview">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </Link>
-        </div>
         <div className={styles.errorState}>
           <span className={styles.emptyIcon}>&#x26A0;</span>
           <h2 className={styles.errorTitle}>Day not found</h2>
@@ -185,15 +203,6 @@ function DayDetailComponent() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.topBar}>
-        <Link to="/" className={styles.backButton} aria-label="Back to overview">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </Link>
-        <span className={styles.topBarTitle}>{day.name} &mdash; {day.sessionName}</span>
-      </div>
-
       {editingHeader ? (
         <div className={styles.editHeaderForm}>
           <Input
@@ -314,7 +323,7 @@ function DayDetailComponent() {
                   <IconButton
                     aria-label={`Delete ${exercise.name}`}
                     variant="danger"
-                    onClick={() => setDeleteTarget(exercise)}
+                    onClick={() => handleDeleteExercise(exercise)}
                     data-testid="delete-exercise-btn"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -330,9 +339,25 @@ function DayDetailComponent() {
       )}
 
       <div className={styles.addBar}>
-        <Button fullWidth onClick={openAddModal} data-testid="add-exercise-btn">
-          + Add Exercise
-        </Button>
+        <div className={styles.addBarButtons}>
+          <Button
+            fullWidth
+            variant="secondary"
+            onClick={() => {
+              const otherDays = program.days.filter(d => d.id !== dayId)
+              if (otherDays.length > 0) {
+                setCopySourceDayId(otherDays[0].id)
+                setCopyModalOpen(true)
+              }
+            }}
+            disabled={program.days.filter(d => d.id !== dayId).length === 0}
+          >
+            Copy from another day
+          </Button>
+          <Button fullWidth onClick={openAddModal} data-testid="add-exercise-btn">
+            + Add Exercise
+          </Button>
+        </div>
       </div>
 
       <Modal
@@ -397,21 +422,24 @@ function DayDetailComponent() {
       </Modal>
 
       <Modal
-        open={deleteTarget !== null}
-        onClose={() => setDeleteTarget(null)}
-        title="Delete Exercise"
+        open={copyModalOpen}
+        onClose={() => { setCopyModalOpen(false); setCopySourceDayId('') }}
+        title="Copy Exercises From"
       >
-        <div className={styles.deleteConfirm}>
-          <p className={styles.deleteMessage}>
-            Are you sure you want to delete{' '}
-            <span className={styles.deleteExName}>{deleteTarget?.name}</span>?
-            This cannot be undone.
-          </p>
-          <div className={styles.deleteActions}>
-            <Button variant="danger" onClick={handleDelete} data-testid="confirm-delete-btn">
-              Delete
+        <div className={styles.formStack}>
+          <Select
+            label="Source Day"
+            options={program.days
+              .filter(d => d.id !== dayId)
+              .map(d => ({ value: d.id, label: `${d.name} — ${d.sessionName} (${d.exercises.length} exercises)` }))}
+            value={copySourceDayId}
+            onChange={(e) => setCopySourceDayId(e.target.value)}
+          />
+          <div className={styles.formActions}>
+            <Button onClick={handleCopyExercises} disabled={!copySourceDayId}>
+              Copy Exercises
             </Button>
-            <Button variant="secondary" onClick={() => setDeleteTarget(null)}>
+            <Button variant="secondary" onClick={() => { setCopyModalOpen(false); setCopySourceDayId('') }}>
               Cancel
             </Button>
           </div>

@@ -4,22 +4,6 @@
   margin: 0 auto;
 }
 
-.header {
-  margin-bottom: 2rem;
-}
-
-.title {
-  font-size: 2rem;
-  font-family: var(--font-display);
-  margin: 0 0 0.5rem 0;
-  color: var(--color-text);
-}
-
-.subtitle {
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
-}
-
 .section {
   margin-bottom: 2rem;
 }

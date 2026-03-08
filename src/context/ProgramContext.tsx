@@ -4,6 +4,7 @@ import {
   useReducer,
   useEffect,
   useRef,
+  useState,
   type ReactNode,
 } from 'react';
 import type { Program, Day, Exercise } from '../types/program';
@@ -42,7 +43,8 @@ type ProgramAction =
   | { type: 'MOVE_DAY_UP'; payload: { dayId: string } }
   | { type: 'MOVE_DAY_DOWN'; payload: { dayId: string } }
   | { type: 'DUPLICATE_DAY'; payload: { dayId: string } }
-  | { type: 'IMPORT_PROGRAM'; payload: Program };
+  | { type: 'IMPORT_PROGRAM'; payload: Program }
+  | { type: 'COPY_EXERCISES_FROM_DAY'; payload: { targetDayId: string; sourceDayId: string } };
 
 function programReducer(state: Program, action: ProgramAction): Program {
   switch (action.type) {
@@ -235,6 +237,25 @@ function programReducer(state: Program, action: ProgramAction): Program {
     case 'IMPORT_PROGRAM':
       return action.payload;
 
+    case 'COPY_EXERCISES_FROM_DAY': {
+      const sourceDay = state.days.find(d => d.id === action.payload.sourceDayId)
+      if (!sourceDay) return state
+
+      const copiedExercises = sourceDay.exercises.map(ex => ({
+        ...ex,
+        id: `ex-${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${Math.random().toString(36).slice(2, 5)}`,
+      }))
+
+      return {
+        ...state,
+        days: state.days.map(d =>
+          d.id === action.payload.targetDayId
+            ? { ...d, exercises: [...d.exercises, ...copiedExercises] }
+            : d
+        ),
+      }
+    }
+
     default:
       return state;
   }
@@ -244,6 +265,7 @@ const ProgramContext = createContext<Program | undefined>(undefined);
 const ProgramDispatchContext = createContext<
   React.Dispatch<ProgramAction> | undefined
 >(undefined);
+const SavedContext = createContext<boolean>(false);
 
 export function ProgramProvider({ children }: { children: ReactNode }) {
   const [program, dispatch] = useReducer(programReducer, null, () => {
@@ -251,7 +273,9 @@ export function ProgramProvider({ children }: { children: ReactNode }) {
     return loaded ?? defaultProgram;
   });
 
+  const [saved, setSaved] = useState(false);
   const saveTimeoutRef = useRef<number | null>(null);
+  const savedTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (saveTimeoutRef.current !== null) {
@@ -260,6 +284,13 @@ export function ProgramProvider({ children }: { children: ReactNode }) {
 
     saveTimeoutRef.current = window.setTimeout(() => {
       saveProgram(program);
+      setSaved(true);
+      if (savedTimeoutRef.current !== null) {
+        clearTimeout(savedTimeoutRef.current);
+      }
+      savedTimeoutRef.current = window.setTimeout(() => {
+        setSaved(false);
+      }, 1500);
     }, 500);
 
     return () => {
@@ -272,7 +303,9 @@ export function ProgramProvider({ children }: { children: ReactNode }) {
   return (
     <ProgramContext.Provider value={program}>
       <ProgramDispatchContext.Provider value={dispatch}>
-        {children}
+        <SavedContext.Provider value={saved}>
+          {children}
+        </SavedContext.Provider>
       </ProgramDispatchContext.Provider>
     </ProgramContext.Provider>
   );
@@ -292,4 +325,8 @@ export function useProgramDispatch() {
     throw new Error('useProgramDispatch must be used within a ProgramProvider');
   }
   return context;
+}
+
+export function useSaved() {
+  return useContext(SavedContext);
 }
