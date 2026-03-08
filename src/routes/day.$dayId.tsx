@@ -95,7 +95,7 @@ function DayDetailComponent() {
       })
     } else {
       const newExercise: Exercise = {
-        id: `ex-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        id: crypto.randomUUID(),
         name: formName.trim(),
         sets: Number(formSets),
         reps: formReps.trim(),
@@ -245,6 +245,32 @@ function DayDetailComponent() {
         </div>
       )}
 
+      {day.sessionType === 'gym' && (
+        <div className={styles.gymSection}>
+          <svg className={styles.gymIcon} width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6.5 6.5h-1a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1z" />
+            <path d="M17.5 6.5h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" />
+            <path d="M3.5 10v4" />
+            <path d="M20.5 10v4" />
+            <line x1="7.5" y1="12" x2="16.5" y2="12" />
+          </svg>
+          <p className={styles.gymText}>Track this workout in Hevy</p>
+          <a
+            href="https://hevy.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.gymLink}
+          >
+            Open Hevy
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+        </div>
+      )}
+
       {day.sessionType !== 'gym' && (
         <>
           {day.exercises.length > 0 && (
@@ -330,13 +356,13 @@ function DayDetailComponent() {
                 fullWidth
                 variant="secondary"
                 onClick={() => {
-                  const otherDays = program.days.filter(d => d.id !== dayId)
+                  const otherDays = program.days.filter(d => d.id !== dayId && d.exercises.length > 0)
                   if (otherDays.length > 0) {
                     setCopySourceDayId(otherDays[0].id)
                     setCopyModalOpen(true)
                   }
                 }}
-                disabled={program.days.filter(d => d.id !== dayId).length === 0}
+                disabled={program.days.filter(d => d.id !== dayId && d.exercises.length > 0).length === 0}
               >
                 Copy from another day
               </Button>
@@ -418,7 +444,7 @@ function DayDetailComponent() {
           <Select
             label="Source Day"
             options={program.days
-              .filter(d => d.id !== dayId)
+              .filter(d => d.id !== dayId && d.exercises.length > 0)
               .map(d => ({ value: d.id, label: `${d.name} — ${d.sessionName} (${d.exercises.length} exercises)` }))}
             value={copySourceDayId}
             onChange={(e) => setCopySourceDayId(e.target.value)}

@@ -54,6 +54,48 @@
   line-height: 1.4;
 }
 
+/* --- Gym Section (Hevy link) --- */
+
+.gymSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.gymIcon {
+  color: var(--color-text-secondary);
+  opacity: 0.4;
+}
+
+.gymText {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.gymLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-muted);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.gymLink:hover {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
 /* --- Exercise Section --- */
 
 .exerciseSection {

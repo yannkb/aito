@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createRoute, Link } from '@tanstack/react-router'
 import { Route as rootRoute } from './__root'
 import { useProgram, useProgramDispatch } from '../context/ProgramContext'
@@ -63,6 +63,18 @@ function HomeComponent() {
   const [formName, setFormName] = useState('')
   const [formSession, setFormSession] = useState('')
   const [formType, setFormType] = useState<Day['sessionType']>('gym')
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const el = document.querySelector('[data-today="true"]')
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const nameExists = formName.trim() !== '' && program.days.some(
+    d => d.name.toLowerCase() === formName.trim().toLowerCase() && d.id !== editingDay?.id
+  )
 
   function openAddModal() {
     setEditingDay(null)
@@ -157,6 +169,7 @@ function HomeComponent() {
             onSubmit={handleSubmit}
             onCancel={closeModal}
             submitLabel="Add Day"
+            nameWarning={nameExists ? 'A day with this name already exists' : undefined}
           />
         </Modal>
       </div>
@@ -212,6 +225,7 @@ function HomeComponent() {
           onSubmit={handleSubmit}
           onCancel={closeModal}
           submitLabel={editingDay ? 'Save Changes' : 'Add Day'}
+          nameWarning={nameExists ? 'A day with this name already exists' : undefined}
         />
       </Modal>
 
@@ -243,7 +257,7 @@ function DayCard({
   onMoveDown,
 }: DayCardProps) {
   return (
-    <Card noPadding interactive={false} className={`${styles.dayCard} ${isToday ? styles.dayCardToday : ''}`} data-testid="day-card">
+    <Card noPadding interactive={false} className={`${styles.dayCard} ${isToday ? styles.dayCardToday : ''}`} data-testid="day-card" data-today={isToday || undefined}>
       <Link
         to="/day/$dayId"
         params={{ dayId: day.id }}
@@ -331,6 +345,7 @@ interface DayFormProps {
   onSubmit: (e: React.FormEvent) => void
   onCancel: () => void
   submitLabel: string
+  nameWarning?: string
 }
 
 function DayForm({
@@ -343,6 +358,7 @@ function DayForm({
   onSubmit,
   onCancel,
   submitLabel,
+  nameWarning,
 }: DayFormProps) {
   return (
     <form onSubmit={onSubmit} className={styles.formStack}>
@@ -352,6 +368,7 @@ function DayForm({
         value={formName}
         onChange={(e) => onNameChange(e.target.value)}
         required
+        error={nameWarning}
         data-testid="day-name-input"
       />
       <Input
