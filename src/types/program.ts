@@ -16,4 +16,5 @@ export interface Exercise {
   sets: number; // 4
   reps: string; // "6-8" or "30-45s" for timed holds
   notes?: string; // "Endurance taparuru", "Quad focus"
+  image?: string; // "/exercises/deep-squat-hold.svg" — optional illustration
 }

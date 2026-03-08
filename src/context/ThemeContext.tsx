@@ -11,7 +11,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-const STORAGE_KEY = 'training-pwa-theme'
+const STORAGE_KEY = 'aito-theme'
 const DEFAULT_THEME: Theme = 'dark-gym'
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

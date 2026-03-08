@@ -254,6 +254,16 @@ function DayDetailComponent() {
             <div key={exercise.id} className={styles.exerciseCard} data-testid="exercise-card">
               <div className={styles.exerciseIndex}>{index + 1}</div>
               <div className={styles.exerciseBody}>
+                {exercise.image && (
+                  <img
+                    src={exercise.image}
+                    alt={exercise.name}
+                    className={styles.exerciseImage}
+                    loading="lazy"
+                    width="64"
+                    height="64"
+                  />
+                )}
                 <span className={styles.exerciseName}>{exercise.name}</span>
                 <div className={styles.exerciseMeta}>
                   <span className={styles.setsReps} data-testid="sets-reps">

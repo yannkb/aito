@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Person in deep squat hold, hands together at chest -->
+  <!-- Head -->
+  <circle cx="60" cy="30" r="8" />
+  <!-- Torso slightly leaned forward -->
+  <line x1="60" y1="38" x2="58" y2="62" />
+  <!-- Arms together in prayer position at chest -->
+  <line x1="58" y1="46" x2="46" y2="52" />
+  <line x1="58" y1="46" x2="46" y2="50" />
+  <circle cx="44" cy="51" r="2" fill="currentColor" />
+  <!-- Left leg: deep squat -->
+  <line x1="58" y1="62" x2="42" y2="78" />
+  <line x1="42" y1="78" x2="40" y2="92" />
+  <line x1="35" y1="92" x2="45" y2="92" />
+  <!-- Right leg: deep squat -->
+  <line x1="58" y1="62" x2="74" y2="78" />
+  <line x1="74" y1="78" x2="76" y2="92" />
+  <line x1="71" y1="92" x2="81" y2="92" />
+  <!-- Ground line -->
+  <line x1="20" y1="96" x2="100" y2="96" stroke-dasharray="4 3" opacity="0.3" />
+</svg>

@@ -15,9 +15,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       manifest: {
-        name: 'Training PWA',
-        short_name: 'TrainPWA',
-        description: 'A progressive web app for training program management',
+        name: 'Aito',
+        short_name: 'Aito',
+        description: 'Ironwood Warrior — Gym × ʻOri Tahiti training program',
         theme_color: '#1a1a1a',
         background_color: '#ffffff',
         display: 'standalone',

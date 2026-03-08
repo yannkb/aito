@@ -140,9 +140,9 @@ function SettingsComponent() {
       {successMessage && <p className={styles.successText}>{successMessage}</p>}
 
       <div className={styles.aboutSection}>
-        <h2 className={styles.appName}>Training PWA</h2>
+        <h2 className={styles.appName}>Aito</h2>
         <p className={styles.appDescription}>
-          Gymbro × ʻOri Tahiti
+          Ironwood Warrior — Gym × ʻOri Tahiti
         </p>
         <p className={styles.version}>Version 0.0.0</p>
       </div>

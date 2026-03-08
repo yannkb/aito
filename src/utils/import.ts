@@ -9,7 +9,8 @@ function isValidExercise(exercise: unknown): exercise is Exercise {
     typeof ex.name === 'string' &&
     typeof ex.sets === 'number' &&
     typeof ex.reps === 'string' &&
-    (ex.notes === undefined || typeof ex.notes === 'string')
+    (ex.notes === undefined || typeof ex.notes === 'string') &&
+    (ex.image === undefined || typeof ex.image === 'string')
   )
 }
 

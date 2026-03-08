@@ -1,6 +1,6 @@
 import type { Program } from '../types/program';
 
-const STORAGE_KEY = 'training-pwa-program';
+const STORAGE_KEY = 'aito-program';
 
 export function saveProgram(program: Program): void {
   try {
