@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting...</title>
+  <script>
+    // SPA routing fix for GitHub Pages
+    // When GitHub Pages returns a 404, this file is served instead
+    // We redirect to index.html with the original path as a query parameter
+    // The app then restores the path from the query parameter
+    
+    (function() {
+      // Get the path that caused the 404
+      const path = window.location.pathname;
+      
+      // Get the repository name from the path
+      // For https://username.github.io/repo-name/day/monday
+      // pathname is /repo-name/day/monday
+      const pathSegments = path.split('/').filter(Boolean);
+      
+      // Determine if we're on a project site or user site
+      // User sites: pathname starts with /
+      // Project sites: pathname starts with /repo-name/
+      let redirectPath = path;
+      
+      // Store the path in sessionStorage so index.html can restore it
+      sessionStorage.setItem('redirect-path', redirectPath);
+      
+      // Redirect to index.html
+      // This will trigger a page load of index.html
+      // The app will read the redirect-path from sessionStorage and restore the route
+      window.location.replace(path.split('/').slice(0, -1).join('/') + '/');
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting to app...</p>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cat position (top) — rounded back -->
+  <!-- Head tucked -->
+  <circle cx="28" cy="28" r="5" />
+  <!-- Spine arched up (cat) -->
+  <path d="M 28 32 Q 30 34 35 30 Q 55 14 75 30 Q 80 34 82 32" />
+  <!-- Arms -->
+  <line x1="35" y1="30" x2="32" y2="46" />
+  <line x1="75" y1="30" x2="78" y2="46" />
+  <!-- Ground for cat -->
+  <line x1="20" y1="48" x2="90" y2="48" stroke-dasharray="4 3" opacity="0.2" />
+
+  <!-- Separator arrow -->
+  <polyline points="53 52 60 56 67 52" opacity="0.4" />
+  <line x1="60" y1="50" x2="60" y2="56" opacity="0.4" />
+
+  <!-- Cow position (bottom) — arched belly -->
+  <!-- Head lifted -->
+  <circle cx="28" cy="66" r="5" />
+  <!-- Spine dipped (cow) -->
+  <path d="M 28 70 Q 30 72 35 74 Q 55 88 75 74 Q 80 72 82 70" />
+  <!-- Arms -->
+  <line x1="35" y1="74" x2="32" y2="96" />
+  <line x1="75" y1="74" x2="78" y2="96" />
+  <!-- Ground for cow -->
+  <line x1="20" y1="100" x2="90" y2="100" stroke-dasharray="4 3" opacity="0.2" />
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Person in pigeon stretch: front leg bent underneath, back leg extended, torso upright -->
+  <!-- Head -->
+  <circle cx="50" cy="24" r="8" />
+  <!-- Torso upright -->
+  <line x1="50" y1="32" x2="50" y2="60" />
+  <!-- Arms resting on front knee area -->
+  <line x1="50" y1="42" x2="38" y2="54" />
+  <line x1="50" y1="42" x2="62" y2="54" />
+  <!-- Front leg: shin across body on ground -->
+  <line x1="50" y1="60" x2="34" y2="70" />
+  <line x1="34" y1="70" x2="28" y2="80" />
+  <line x1="28" y1="80" x2="60" y2="82" />
+  <!-- Back leg: extended behind -->
+  <line x1="50" y1="60" x2="70" y2="68" />
+  <line x1="70" y1="68" x2="100" y2="76" />
+  <!-- Foot of back leg -->
+  <line x1="100" y1="76" x2="102" y2="72" />
+  <!-- Ground line -->
+  <line x1="15" y1="86" x2="105" y2="86" stroke-dasharray="4 3" opacity="0.3" />
+</svg>
