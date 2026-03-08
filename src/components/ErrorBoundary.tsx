@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react'
+import { STORAGE_KEYS } from '../constants/storage'
 
 interface Props {
   children: ReactNode
@@ -23,8 +24,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleClearAndReload = () => {
-    localStorage.removeItem('aito-program')
-    localStorage.removeItem('aito-theme')
+    localStorage.removeItem(STORAGE_KEYS.PROGRAM)
+    localStorage.removeItem(STORAGE_KEYS.THEME)
     window.location.reload()
   }
 

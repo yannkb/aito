@@ -13,21 +13,18 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const [visible, setVisible] = useState(false)
-  const [closing, setClosing] = useState(false)
 
-  useEffect(() => {
-    if (open) {
-      setVisible(true)
-      setClosing(false)
-    } else if (visible) {
-      setClosing(true)
-      const timer = setTimeout(() => {
-        setVisible(false)
-        setClosing(false)
-      }, 200)
-      return () => clearTimeout(timer)
+  if (open && !visible) {
+    setVisible(true)
+  }
+
+  const closing = visible && !open
+
+  function handleAnimationEnd() {
+    if (closing) {
+      setVisible(false)
     }
-  }, [open, visible])
+  }
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -67,7 +64,8 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   useEffect(() => {
     if (!open) return
 
-    previousFocusRef.current = document.activeElement as HTMLElement
+    const active = document.activeElement
+    previousFocusRef.current = active instanceof HTMLElement ? active : null
     document.addEventListener('keydown', handleKeyDown)
     document.body.style.overflow = 'hidden'
 
@@ -103,6 +101,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     <div
       className={backdropClass}
       onClick={handleBackdropClick}
+      onAnimationEnd={handleAnimationEnd}
       role="presentation"
     >
       <div

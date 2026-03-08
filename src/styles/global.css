@@ -60,6 +60,11 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 p,
@@ -88,7 +93,7 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 ul,
@@ -99,6 +104,10 @@ ol {
 #root {
   min-height: 100vh;
   isolation: isolate;
+  --z-nav: 100;
+  --z-toast: 200;
+  --z-modal: 1000;
+  --z-popover: 1100;
 }
 
 /* --- Theme Transition (smooth color switch) --- */
@@ -109,10 +118,12 @@ ol {
     color 0.2s ease;
 }
 
-[data-theme] *:not([class*="modal"]):not([class*="backdrop"]) {
-  transition-property: background-color, color, border-color;
-  transition-duration: 0.2s;
-  transition-timing-function: ease;
+[data-theme] button,
+[data-theme] a,
+[data-theme] input,
+[data-theme] select,
+[data-theme] textarea {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 /* --- iOS Input Zoom Prevention --- */

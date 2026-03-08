@@ -1,0 +1,131 @@
+.exerciseCard {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  animation: slideIn 0.25s ease backwards;
+}
+
+.exerciseCard:hover {
+  border-color: var(--color-primary-muted);
+}
+
+.exerciseCard:nth-child(1) { animation-delay: 0.02s; }
+.exerciseCard:nth-child(2) { animation-delay: 0.04s; }
+.exerciseCard:nth-child(3) { animation-delay: 0.06s; }
+.exerciseCard:nth-child(4) { animation-delay: 0.08s; }
+.exerciseCard:nth-child(5) { animation-delay: 0.1s; }
+.exerciseCard:nth-child(6) { animation-delay: 0.12s; }
+.exerciseCard:nth-child(7) { animation-delay: 0.14s; }
+.exerciseCard:nth-child(8) { animation-delay: 0.16s; }
+.exerciseCard:nth-child(9) { animation-delay: 0.18s; }
+.exerciseCard:nth-child(10) { animation-delay: 0.2s; }
+.exerciseCard:nth-child(n+11) { animation-delay: 0.2s; }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exerciseIndex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-right: 1px solid var(--color-border);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.exerciseBody {
+  flex: 1;
+  padding: 0.75rem 0.875rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.exerciseImage {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  background-color: var(--color-surface-elevated);
+  padding: 4px;
+  align-self: flex-start;
+  filter: var(--exercise-image-filter, none);
+}
+
+.exerciseName {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.exerciseMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.setsReps {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+  background-color: var(--color-primary-muted);
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-sm);
+  line-height: 1.5;
+}
+
+.exerciseNotes {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.moreButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  flex-shrink: 0;
+  align-self: center;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color 0.15s ease;
+}
+
+.moreButton:hover {
+  color: var(--color-text);
+}
+
+.moreButton:active {
+  transform: scale(0.9);
+}

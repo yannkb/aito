@@ -35,7 +35,7 @@ function isValidDay(day: unknown): day is Day {
   return d.exercises.every(isValidExercise)
 }
 
-function isValidProgram(data: unknown): data is Program {
+export function isValidProgram(data: unknown): data is Program {
   if (typeof data !== 'object' || data === null) return false
   const program = data as Record<string, unknown>
   

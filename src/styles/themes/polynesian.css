@@ -8,6 +8,8 @@
   --color-primary-hover: #096B67;
   --color-primary-muted: rgba(11, 122, 117, 0.10);
   --color-secondary: #F25C54;
+  --color-secondary-rgb: 242, 92, 84;
+  --color-warning-rgb: 229, 137, 10;
   --color-text: #3C2415;
   --color-text-secondary: #8B7355;
   --color-border: #E0D5C1;
@@ -29,4 +31,8 @@
   --font-display: "Playfair Display", "Georgia", serif;
   --font-body: "Source Sans 3", "Verdana", sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --color-neutral-muted: rgba(60, 36, 21, 0.08);
+  --exercise-image-filter: none;
+  --color-backdrop: rgba(60, 36, 21, 0.4);
 }

@@ -8,6 +8,8 @@
   --color-primary-hover: #00e676;
   --color-primary-muted: rgba(0, 255, 135, 0.12);
   --color-secondary: #00B4D8;
+  --color-secondary-rgb: 0, 180, 216;
+  --color-warning-rgb: 255, 165, 2;
   --color-text: #f0f0f0;
   --color-text-secondary: #8a8a8a;
   --color-border: #2a2a2a;
@@ -30,5 +32,7 @@
   --font-body: "DM Sans", "Helvetica Neue", sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
+  --color-neutral-muted: rgba(138, 138, 138, 0.12);
   --exercise-image-filter: invert(1);
+  --color-backdrop: rgba(0, 0, 0, 0.6);
 }

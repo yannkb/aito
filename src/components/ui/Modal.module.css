@@ -1,11 +1,11 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--color-backdrop);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   padding: 0;
@@ -73,7 +73,6 @@
   color: var(--color-text-secondary);
   font-size: 1.25rem;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color 0.15s ease, color 0.15s ease;
 }

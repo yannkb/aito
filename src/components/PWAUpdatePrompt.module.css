@@ -5,7 +5,7 @@
   right: 1rem;
   max-width: 28rem;
   margin-inline: auto;
-  z-index: 200;
+  z-index: var(--z-toast);
 
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
 }
 
 .updateButton {
-  min-height: 36px;
+  min-height: 44px;
   padding: 0.375rem 1rem;
   background-color: var(--color-primary);
   color: var(--color-bg);
@@ -45,7 +45,6 @@
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color 0.15s ease, transform 0.1s ease;
 }
@@ -58,15 +57,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   font-size: 0.875rem;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color 0.15s ease, color 0.15s ease;
 }

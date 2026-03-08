@@ -75,9 +75,11 @@ export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
     if (!open) return
 
     const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target
+      if (!(target instanceof Node)) return
       if (
-        triggerRef.current?.contains(e.target as Node) ||
-        menuRef.current?.contains(e.target as Node)
+        triggerRef.current?.contains(target) ||
+        menuRef.current?.contains(target)
       ) {
         return
       }
@@ -126,7 +128,7 @@ export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
             role="menu"
             style={menuStyle}
           >
-            {items.map((item, index) => {
+            {items.map((item) => {
               const itemClasses = [
                 styles.item,
                 item.variant === 'danger' ? styles.itemDanger : '',
@@ -137,7 +139,7 @@ export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
 
               return (
                 <button
-                  key={index}
+                  key={item.label}
                   type="button"
                   className={itemClasses}
                   role="menuitem"

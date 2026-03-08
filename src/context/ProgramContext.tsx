@@ -1,15 +1,17 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
-  useContext,
+  use,
   useReducer,
   useEffect,
   useRef,
   useState,
   type ReactNode,
-} from 'react';
-import type { Program, Day, Exercise } from '../types/program';
+} from 'react'
+import type { Program, Day, Exercise } from '../types/program'
 import { defaultProgram } from '../data/defaultProgram';
 import { saveProgram, loadProgram } from '../utils/storage';
+import { generateId } from '../utils/id';
 
 type ProgramAction =
   | { type: 'LOAD_PROGRAM'; payload: Program }
@@ -43,8 +45,15 @@ type ProgramAction =
   | { type: 'MOVE_DAY_UP'; payload: { dayId: string } }
   | { type: 'MOVE_DAY_DOWN'; payload: { dayId: string } }
   | { type: 'DUPLICATE_DAY'; payload: { dayId: string } }
-  | { type: 'IMPORT_PROGRAM'; payload: Program }
   | { type: 'COPY_EXERCISES_FROM_DAY'; payload: { targetDayId: string; sourceDayId: string } };
+
+function swapItems<T>(array: T[], index: number, direction: 'up' | 'down'): T[] | null {
+  const targetIndex = direction === 'up' ? index - 1 : index + 1
+  if (targetIndex < 0 || targetIndex >= array.length) return null
+  const result = [...array];
+  [result[index], result[targetIndex]] = [result[targetIndex], result[index]]
+  return result
+}
 
 function programReducer(state: Program, action: ProgramAction): Program {
   switch (action.type) {
@@ -119,92 +128,41 @@ function programReducer(state: Program, action: ProgramAction): Program {
       };
 
     case 'MOVE_EXERCISE_UP': {
-      const dayIndex = state.days.findIndex(
-        (day) => day.id === action.payload.dayId
-      );
-      if (dayIndex === -1) return state;
-
-      const day = state.days[dayIndex];
-      const exerciseIndex = day.exercises.findIndex(
-        (ex) => ex.id === action.payload.exerciseId
-      );
-      if (exerciseIndex <= 0) return state;
-
-      const newExercises = [...day.exercises];
-      [newExercises[exerciseIndex - 1], newExercises[exerciseIndex]] = [
-        newExercises[exerciseIndex],
-        newExercises[exerciseIndex - 1],
-      ];
-
+      const dayIndex = state.days.findIndex(d => d.id === action.payload.dayId)
+      if (dayIndex === -1) return state
+      const day = state.days[dayIndex]
+      const exIndex = day.exercises.findIndex(ex => ex.id === action.payload.exerciseId)
+      const swapped = swapItems(day.exercises, exIndex, 'up')
+      if (!swapped) return state
       return {
         ...state,
-        days: state.days.map((d, i) =>
-          i === dayIndex ? { ...d, exercises: newExercises } : d
-        ),
-      };
+        days: state.days.map((d, i) => i === dayIndex ? { ...d, exercises: swapped } : d),
+      }
     }
 
     case 'MOVE_EXERCISE_DOWN': {
-      const dayIndex = state.days.findIndex(
-        (day) => day.id === action.payload.dayId
-      );
-      if (dayIndex === -1) return state;
-
-      const day = state.days[dayIndex];
-      const exerciseIndex = day.exercises.findIndex(
-        (ex) => ex.id === action.payload.exerciseId
-      );
-      if (exerciseIndex === -1 || exerciseIndex >= day.exercises.length - 1)
-        return state;
-
-      const newExercises = [...day.exercises];
-      [newExercises[exerciseIndex], newExercises[exerciseIndex + 1]] = [
-        newExercises[exerciseIndex + 1],
-        newExercises[exerciseIndex],
-      ];
-
+      const dayIndex = state.days.findIndex(d => d.id === action.payload.dayId)
+      if (dayIndex === -1) return state
+      const day = state.days[dayIndex]
+      const exIndex = day.exercises.findIndex(ex => ex.id === action.payload.exerciseId)
+      const swapped = swapItems(day.exercises, exIndex, 'down')
+      if (!swapped) return state
       return {
         ...state,
-        days: state.days.map((d, i) =>
-          i === dayIndex ? { ...d, exercises: newExercises } : d
-        ),
-      };
+        days: state.days.map((d, i) => i === dayIndex ? { ...d, exercises: swapped } : d),
+      }
     }
 
     case 'MOVE_DAY_UP': {
-      const dayIndex = state.days.findIndex(
-        (day) => day.id === action.payload.dayId
-      );
-      if (dayIndex <= 0) return state;
-
-      const newDays = [...state.days];
-      [newDays[dayIndex - 1], newDays[dayIndex]] = [
-        newDays[dayIndex],
-        newDays[dayIndex - 1],
-      ];
-
-      return {
-        ...state,
-        days: newDays,
-      };
+      const dayIndex = state.days.findIndex(d => d.id === action.payload.dayId)
+      const swapped = swapItems(state.days, dayIndex, 'up')
+      return swapped ? { ...state, days: swapped } : state
     }
 
     case 'MOVE_DAY_DOWN': {
-      const dayIndex = state.days.findIndex(
-        (day) => day.id === action.payload.dayId
-      );
-      if (dayIndex === -1 || dayIndex >= state.days.length - 1) return state;
-
-      const newDays = [...state.days];
-      [newDays[dayIndex], newDays[dayIndex + 1]] = [
-        newDays[dayIndex + 1],
-        newDays[dayIndex],
-      ];
-
-      return {
-        ...state,
-        days: newDays,
-      };
+      const dayIndex = state.days.findIndex(d => d.id === action.payload.dayId)
+      const swapped = swapItems(state.days, dayIndex, 'down')
+      return swapped ? { ...state, days: swapped } : state
     }
 
     case 'DUPLICATE_DAY': {
@@ -215,13 +173,13 @@ function programReducer(state: Program, action: ProgramAction): Program {
 
       const sourceDay = state.days[sourceDayIndex];
       const duplicatedDay: Day = {
-        id: `day-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        id: generateId(),
         name: `${sourceDay.name} (copy)`,
         sessionName: sourceDay.sessionName,
         sessionType: sourceDay.sessionType,
         exercises: sourceDay.exercises.map((ex) => ({
           ...ex,
-          id: `ex-${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${Math.random().toString(36).slice(2, 5)}`,
+          id: generateId(),
         })),
       };
 
@@ -234,16 +192,13 @@ function programReducer(state: Program, action: ProgramAction): Program {
       };
     }
 
-    case 'IMPORT_PROGRAM':
-      return action.payload;
-
     case 'COPY_EXERCISES_FROM_DAY': {
       const sourceDay = state.days.find(d => d.id === action.payload.sourceDayId)
       if (!sourceDay) return state
 
       const copiedExercises = sourceDay.exercises.map(ex => ({
         ...ex,
-        id: `ex-${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${Math.random().toString(36).slice(2, 5)}`,
+        id: generateId(),
       }))
 
       return {
@@ -256,8 +211,10 @@ function programReducer(state: Program, action: ProgramAction): Program {
       }
     }
 
-    default:
-      return state;
+    default: {
+      const _exhaustive: never = action;
+      return _exhaustive;
+    }
   }
 }
 
@@ -312,7 +269,7 @@ export function ProgramProvider({ children }: { children: ReactNode }) {
 }
 
 export function useProgram() {
-  const context = useContext(ProgramContext);
+  const context = use(ProgramContext);
   if (context === undefined) {
     throw new Error('useProgram must be used within a ProgramProvider');
   }
@@ -320,7 +277,7 @@ export function useProgram() {
 }
 
 export function useProgramDispatch() {
-  const context = useContext(ProgramDispatchContext);
+  const context = use(ProgramDispatchContext);
   if (context === undefined) {
     throw new Error('useProgramDispatch must be used within a ProgramProvider');
   }
@@ -328,5 +285,5 @@ export function useProgramDispatch() {
 }
 
 export function useSaved() {
-  return useContext(SavedContext);
+  return use(SavedContext);
 }

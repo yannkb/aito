@@ -26,15 +26,11 @@ function RootComponent() {
     window.scrollTo(0, 0)
   }, [pathname])
 
-  useEffect(() => {
-    if (pathname === '/settings') {
-      document.title = 'Aito \u00b7 Settings'
-    } else if (day) {
-      document.title = `Aito \u00b7 ${day.name} \u2014 ${day.sessionName}`
-    } else {
-      document.title = 'Aito'
-    }
-  }, [pathname, day])
+  const pageTitle = pathname === '/settings'
+    ? 'Aito \u00b7 Settings'
+    : day
+      ? `Aito \u00b7 ${day.name} \u2014 ${day.sessionName}`
+      : 'Aito'
 
   const renderHeader = () => {
     if (dayId) {
@@ -61,6 +57,7 @@ function RootComponent() {
 
   return (
     <div className="app-root" data-theme={theme}>
+      <title>{pageTitle}</title>
       <OfflineIndicator />
 
       <header className="app-header">

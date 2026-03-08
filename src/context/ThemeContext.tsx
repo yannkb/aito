@@ -1,5 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
+import { STORAGE_KEYS } from '../constants/storage'
 
 type Theme = 'dark-gym' | 'polynesian'
 
@@ -11,37 +13,36 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-const STORAGE_KEY = 'aito-theme'
-const DEFAULT_THEME: Theme = 'dark-gym'
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    return (stored as Theme) || DEFAULT_THEME
+    const stored = localStorage.getItem(STORAGE_KEYS.THEME)
+    return stored === 'dark-gym' || stored === 'polynesian' ? stored : 'dark-gym'
   })
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem(STORAGE_KEY, theme)
+    localStorage.setItem(STORAGE_KEYS.THEME, theme)
   }, [theme])
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setThemeState((prev) => (prev === 'dark-gym' ? 'polynesian' : 'dark-gym'))
-  }
+  }, [])
 
-  const setTheme = (newTheme: Theme) => {
+  const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme)
-  }
+  }, [])
+
+  const value = useMemo(() => ({ theme, toggleTheme, setTheme }), [theme, toggleTheme, setTheme])
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   )
 }
 
 export function useTheme() {
-  const context = useContext(ThemeContext)
+  const context = use(ThemeContext)
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider')
   }

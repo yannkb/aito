@@ -84,7 +84,7 @@ function SettingsComponent() {
 
     try {
       const importedProgram = await importProgram(pendingFile)
-      dispatch({ type: 'IMPORT_PROGRAM', payload: importedProgram })
+      dispatch({ type: 'LOAD_PROGRAM', payload: importedProgram })
       setSuccessMessage('Program imported successfully!')
       setErrorMessage(null)
       setShowImportConfirm(false)

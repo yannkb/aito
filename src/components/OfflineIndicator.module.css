@@ -14,7 +14,7 @@
   color: var(--color-text-secondary);
   font-size: 0.75rem;
   font-weight: 500;
-  z-index: 200;
+  z-index: var(--z-toast);
   animation: slideDown 0.3s ease;
 }
 

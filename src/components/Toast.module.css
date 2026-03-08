@@ -8,7 +8,7 @@
   bottom: calc(72px + env(safe-area-inset-bottom) + 0.75rem);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 200;
+  z-index: var(--z-toast);
 
   width: calc(100% - 2rem);
   max-width: 32rem;
@@ -80,7 +80,6 @@
 
   cursor: pointer;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 
   transition:

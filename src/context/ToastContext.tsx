@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useCallback, useRef } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, use, useState, useCallback, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { Toast } from '../components/Toast'
 import type { ToastData } from '../components/Toast'
@@ -58,7 +59,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 export function useToast() {
-  const context = useContext(ToastContext)
+  const context = use(ToastContext)
   if (!context) {
     throw new Error('useToast must be used within a ToastProvider')
   }
