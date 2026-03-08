@@ -263,9 +263,11 @@ function DayCard({
               {day.sessionType}
             </span>
           </div>
-          <span className={styles.exerciseCount}>
-            {day.exercises.length} exercise{day.exercises.length !== 1 ? 's' : ''}
-          </span>
+          {day.sessionType !== 'gym' && (
+            <span className={styles.exerciseCount}>
+              {day.exercises.length} exercise{day.exercises.length !== 1 ? 's' : ''}
+            </span>
+          )}
         </div>
       </Link>
 

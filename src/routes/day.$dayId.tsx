@@ -245,111 +245,108 @@ function DayDetailComponent() {
         </div>
       )}
 
-      <p className={styles.exerciseCount}>
-        {day.exercises.length} exercise{day.exercises.length !== 1 ? 's' : ''}
-      </p>
-
-      {day.exercises.length === 0 ? (
-        <div className={styles.emptyState}>
-          <span className={styles.emptyIcon}>&#x1F3CB;</span>
-          <h3 className={styles.emptyTitle}>No exercises yet</h3>
-          <p className={styles.emptyText}>
-            No exercises yet &mdash; add your first one!
-          </p>
-        </div>
-      ) : (
-        <div className={styles.exerciseList}>
-          {day.exercises.map((exercise, index) => (
-            <div key={exercise.id} className={styles.exerciseCard} data-testid="exercise-card">
-              <div className={styles.exerciseIndex}>{index + 1}</div>
-              <div className={styles.exerciseBody}>
-                {exercise.image && (
-                  <img
-                    src={`${import.meta.env.BASE_URL}${exercise.image.replace(/^\//, '')}`}
-                    alt={exercise.name}
-                    className={styles.exerciseImage}
-                    loading="lazy"
-                    width="64"
-                    height="64"
-                  />
-                )}
-                <span className={styles.exerciseName}>{exercise.name}</span>
-                <div className={styles.exerciseMeta}>
-                  <span className={styles.setsReps} data-testid="sets-reps">
-                    {exercise.sets} &times; {exercise.reps}
-                  </span>
-                </div>
-                {exercise.notes && (
-                  <span className={styles.exerciseNotes}>{exercise.notes}</span>
-                )}
+      {day.sessionType !== 'gym' && (
+        <>
+          {day.exercises.length > 0 && (
+            <div className={styles.exerciseSection}>
+              <p className={styles.exerciseCount}>
+                {day.exercises.length} exercise{day.exercises.length !== 1 ? 's' : ''}
+              </p>
+              <div className={styles.exerciseList}>
+                {day.exercises.map((exercise, index) => (
+                  <div key={exercise.id} className={styles.exerciseCard} data-testid="exercise-card">
+                    <div className={styles.exerciseIndex}>{index + 1}</div>
+                    <div className={styles.exerciseBody}>
+                      {exercise.image && (
+                        <img
+                          src={`${import.meta.env.BASE_URL}${exercise.image.replace(/^\//, '')}`}
+                          alt={exercise.name}
+                          className={styles.exerciseImage}
+                          loading="lazy"
+                          width="64"
+                          height="64"
+                        />
+                      )}
+                      <span className={styles.exerciseName}>{exercise.name}</span>
+                      <div className={styles.exerciseMeta}>
+                        <span className={styles.setsReps} data-testid="sets-reps">
+                          {exercise.sets} &times; {exercise.reps}
+                        </span>
+                      </div>
+                      {exercise.notes && (
+                        <span className={styles.exerciseNotes}>{exercise.notes}</span>
+                      )}
+                    </div>
+                    <Popover
+                      align="right"
+                      items={[
+                        {
+                          icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>,
+                          label: 'Edit',
+                          onClick: () => openEditModal(exercise),
+                        },
+                        {
+                          icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15" /></svg>,
+                          label: 'Move up',
+                          onClick: () => handleMoveUp(exercise.id),
+                          disabled: index === 0,
+                        },
+                        {
+                          icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>,
+                          label: 'Move down',
+                          onClick: () => handleMoveDown(exercise.id),
+                          disabled: index === day.exercises.length - 1,
+                        },
+                        {
+                          icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>,
+                          label: 'Delete',
+                          onClick: () => handleDeleteExercise(exercise),
+                          variant: 'danger' as const,
+                        },
+                      ]}
+                      trigger={
+                        <button
+                          type="button"
+                          className={styles.moreButton}
+                          aria-label={`Actions for ${exercise.name}`}
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="5" r="2" />
+                            <circle cx="12" cy="12" r="2" />
+                            <circle cx="12" cy="19" r="2" />
+                          </svg>
+                        </button>
+                      }
+                    />
+                  </div>
+                ))}
               </div>
-              <Popover
-                align="right"
-                items={[
-                  {
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>,
-                    label: 'Edit',
-                    onClick: () => openEditModal(exercise),
-                  },
-                  {
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15" /></svg>,
-                    label: 'Move up',
-                    onClick: () => handleMoveUp(exercise.id),
-                    disabled: index === 0,
-                  },
-                  {
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>,
-                    label: 'Move down',
-                    onClick: () => handleMoveDown(exercise.id),
-                    disabled: index === day.exercises.length - 1,
-                  },
-                  {
-                    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>,
-                    label: 'Delete',
-                    onClick: () => handleDeleteExercise(exercise),
-                    variant: 'danger' as const,
-                  },
-                ]}
-                trigger={
-                  <button
-                    type="button"
-                    className={styles.moreButton}
-                    aria-label={`Actions for ${exercise.name}`}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <circle cx="12" cy="5" r="2" />
-                      <circle cx="12" cy="12" r="2" />
-                      <circle cx="12" cy="19" r="2" />
-                    </svg>
-                  </button>
-                }
-              />
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      <div className={styles.addBar}>
-        <div className={styles.addBarButtons}>
-          <Button
-            fullWidth
-            variant="secondary"
-            onClick={() => {
-              const otherDays = program.days.filter(d => d.id !== dayId)
-              if (otherDays.length > 0) {
-                setCopySourceDayId(otherDays[0].id)
-                setCopyModalOpen(true)
-              }
-            }}
-            disabled={program.days.filter(d => d.id !== dayId).length === 0}
-          >
-            Copy from another day
-          </Button>
-          <Button fullWidth onClick={openAddModal} data-testid="add-exercise-btn">
-            + Add Exercise
-          </Button>
-        </div>
-      </div>
+          <div className={styles.addBar}>
+            <div className={styles.addBarButtons}>
+              <Button
+                fullWidth
+                variant="secondary"
+                onClick={() => {
+                  const otherDays = program.days.filter(d => d.id !== dayId)
+                  if (otherDays.length > 0) {
+                    setCopySourceDayId(otherDays[0].id)
+                    setCopyModalOpen(true)
+                  }
+                }}
+                disabled={program.days.filter(d => d.id !== dayId).length === 0}
+              >
+                Copy from another day
+              </Button>
+              <Button fullWidth variant="secondary" onClick={openAddModal} data-testid="add-exercise-btn">
+                + Add Exercise
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
 
       <Modal
         open={exerciseModalOpen}
