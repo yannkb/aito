@@ -246,7 +246,9 @@ function DayDetailComponent() {
             <span className={styles.gymIcon}><BarbellIcon size={32} /></span>
             <p className={styles.gymText}>Track your sets and reps in Hevy</p>
             <a
-              href="https://hevy.com"
+              href="https://hevy.com/deeplink/"
+              target="_blank"
+              rel="noopener noreferrer"
               className={styles.gymLink}
             >
               Open Hevy
