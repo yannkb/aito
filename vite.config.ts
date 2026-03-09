@@ -28,7 +28,7 @@ export default defineConfig({
         name: 'Aito',
         short_name: 'Aito',
         description: 'Ironwood Warrior — Gym × ʻOri Tahiti training program',
-        theme_color: '#1a1a1a',
+        theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: 'standalone',
         scope: process.env.BASE_URL || '/',
@@ -55,7 +55,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
       },
     }),
   ],

@@ -241,24 +241,24 @@ function DayDetailComponent() {
       )}
 
       {day.sessionType === 'gym' && (
-        <div className={styles.gymSection}>
-          <span className={styles.gymIcon}><BarbellIcon size={32} /></span>
-          <p className={styles.gymText}>Track this workout in Hevy</p>
-          <a
-            href="https://hevy.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.gymLink}
-          >
-            Open Hevy
-            <ExternalLinkIcon />
-          </a>
+        <div className={styles.gymCard}>
+          <div className={styles.gymSection}>
+            <span className={styles.gymIcon}><BarbellIcon size={32} /></span>
+            <p className={styles.gymText}>Track your sets and reps in Hevy</p>
+            <a
+              href="https://hevy.com"
+              className={styles.gymLink}
+            >
+              Open Hevy
+              <ExternalLinkIcon />
+            </a>
+          </div>
         </div>
       )}
 
       {day.sessionType !== 'gym' && (
         <>
-          {day.exercises.length > 0 && (
+          {day.exercises.length > 0 ? (
             <div className={styles.exerciseSection}>
               <p className={styles.exerciseCount}>
                 {day.exercises.length} exercise{day.exercises.length !== 1 ? 's' : ''}
@@ -278,6 +278,12 @@ function DayDetailComponent() {
                 ))}
               </div>
             </div>
+          ) : (
+            <div className={styles.emptyExercises}>
+              <span className={styles.emptyExercisesIcon}>📋</span>
+              <p className={styles.emptyExercisesText}>No exercises yet</p>
+              <p className={styles.emptyExercisesHint}>Add one below to build your session</p>
+            </div>
           )}
 
           <div className={styles.addBar}>
@@ -294,6 +300,7 @@ function DayDetailComponent() {
                 + Add Exercise
               </Button>
             </div>
+            <p className={styles.shortcutHint}>Press <kbd className={styles.kbd}>N</kbd> to add exercise</p>
           </div>
         </>
       )}

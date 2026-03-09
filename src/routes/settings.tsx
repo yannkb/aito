@@ -1,6 +1,6 @@
 import { createRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './__root'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
@@ -20,25 +20,44 @@ function SettingsComponent() {
   const program = useProgram()
   const dispatch = useProgramDispatch()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const messageTimerRef = useRef<number | null>(null)
 
   const [showImportConfirm, setShowImportConfirm] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [importing, setImporting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   const canShare = typeof navigator !== 'undefined' && !!navigator.share
 
+  useEffect(() => {
+    return () => {
+      if (messageTimerRef.current !== null) {
+        clearTimeout(messageTimerRef.current)
+      }
+    }
+  }, [])
+
+  const showTimedSuccess = useCallback((message: string) => {
+    if (messageTimerRef.current !== null) clearTimeout(messageTimerRef.current)
+    setSuccessMessage(message)
+    setErrorMessage(null)
+    messageTimerRef.current = window.setTimeout(() => setSuccessMessage(null), 3000)
+  }, [])
+
+  const showTimedError = useCallback((message: string) => {
+    if (messageTimerRef.current !== null) clearTimeout(messageTimerRef.current)
+    setErrorMessage(message)
+    setSuccessMessage(null)
+    messageTimerRef.current = window.setTimeout(() => setErrorMessage(null), 3000)
+  }, [])
+
   const handleExport = () => {
     try {
       exportProgram(program)
-      setSuccessMessage('Program exported successfully!')
-      setErrorMessage(null)
-      setTimeout(() => setSuccessMessage(null), 3000)
+      showTimedSuccess('Program exported successfully!')
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Failed to export program'
-      )
-      setSuccessMessage(null)
+      showTimedError(error instanceof Error ? error.message : 'Failed to export program')
     }
   }
 
@@ -53,13 +72,10 @@ function SettingsComponent() {
         text: 'Check out my training program!',
         files: [file],
       })
-      setSuccessMessage('Program shared!')
-      setErrorMessage(null)
-      setTimeout(() => setSuccessMessage(null), 3000)
+      showTimedSuccess('Program shared!')
     } catch (error) {
       if (error instanceof Error && error.name !== 'AbortError') {
-        setErrorMessage('Sharing failed. Try exporting instead.')
-        setTimeout(() => setErrorMessage(null), 3000)
+        showTimedError('Sharing failed. Try exporting instead.')
       }
     }
   }
@@ -80,23 +96,21 @@ function SettingsComponent() {
   }
 
   const handleImportConfirm = async () => {
-    if (!pendingFile) return
+    if (!pendingFile || importing) return
+    setImporting(true)
 
     try {
       const importedProgram = await importProgram(pendingFile)
       dispatch({ type: 'LOAD_PROGRAM', payload: importedProgram })
-      setSuccessMessage('Program imported successfully!')
-      setErrorMessage(null)
+      showTimedSuccess('Program imported successfully!')
       setShowImportConfirm(false)
       setPendingFile(null)
-      setTimeout(() => setSuccessMessage(null), 3000)
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Failed to import program'
-      )
-      setSuccessMessage(null)
+      showTimedError(error instanceof Error ? error.message : 'Failed to import program')
       setShowImportConfirm(false)
       setPendingFile(null)
+    } finally {
+      setImporting(false)
     }
   }
 
@@ -178,10 +192,12 @@ function SettingsComponent() {
           This will replace your current program. Continue?
         </p>
         <div className={styles.modalActions}>
-          <Button variant="secondary" onClick={handleImportCancel}>
+          <Button variant="secondary" onClick={handleImportCancel} disabled={importing}>
             Cancel
           </Button>
-          <Button onClick={handleImportConfirm}>Import</Button>
+          <Button onClick={handleImportConfirm} disabled={importing}>
+            {importing ? 'Importing...' : 'Import'}
+          </Button>
         </div>
       </Modal>
     </div>

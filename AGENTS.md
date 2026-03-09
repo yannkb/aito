@@ -14,10 +14,10 @@ aito/
 │   ├── routes/           # TanStack Router pages (index, day detail, settings)
 │   ├── components/ui/    # Reusable UI primitives (Button, Card, Modal, Input, Select, IconButton, Popover)
 │   ├── components/       # Feature components (DayCard, DayForm, ExerciseCard, icons, ThemeToggle, Toast, ErrorBoundary)
-│   ├── context/          # State: ProgramContext (useReducer, 14 actions) + ThemeContext + ToastContext
+│   ├── context/          # State: ProgramContext (useReducer, 13 actions) + ThemeContext + ToastContext
 │   ├── constants/        # Centralized localStorage keys (STORAGE_KEYS)
 │   ├── types/            # Program/Day/Exercise interfaces
-│   ├── data/             # Default training program (mobility, gym, ori, rest)
+│   ├── data/             # Default training program + exercise templates
 │   ├── utils/            # Storage, import/export, ID generation, snapshot
 │   ├── styles/           # Global CSS, navigation, theme CSS files
 │   └── App.tsx           # Router provider (routeTree.gen auto-generated)
@@ -31,7 +31,7 @@ aito/
 |------|----------|-------|
 | Add/edit routes | `src/routes/` | Use `createRoute` + `getParentRoute`, NOT `createFileRoute` |
 | Route tree | `src/routeTree.gen.ts` | Auto-generated — never edit manually |
-| State actions | `src/context/ProgramContext.tsx` | 14 action types in discriminated union, exhaustive `never` check |
+| State actions | `src/context/ProgramContext.tsx` | 13 action types in discriminated union, exhaustive `never` check |
 | Data types | `src/types/program.ts` | Program → Day → Exercise hierarchy |
 | Default data | `src/data/defaultProgram.ts` | `withIds()` helper for shared mobility exercises |
 | Theme CSS vars | `src/styles/themes/dark-gym.css`, `polynesian.css` | Applied via `data-theme` on `<html>` |
@@ -50,17 +50,20 @@ aito/
 | Symbol | Type | File | Role |
 |--------|------|------|------|
 | `Program` | interface | types/program.ts | Root state: `{ days: Day[] }` |
-| `Day` | interface | types/program.ts | id, name, sessionName, sessionType, exercises |
+| `Day` | interface | types/program.ts | id, name, sessionName, sessionType, exercises, notes? |
 | `Exercise` | interface | types/program.ts | id, name, sets, reps, notes?, image? |
 | `STORAGE_KEYS` | const | constants/storage.ts | `{ PROGRAM: 'aito-program', THEME: 'aito-theme' }` |
 | `ProgramProvider` | component | context/ProgramContext.tsx | Wraps app, useReducer + debounced localStorage save (500ms) |
-| `programReducer` | function | context/ProgramContext.tsx | 14 actions: CRUD days/exercises + move + duplicate + import + copy |
+| `programReducer` | function | context/ProgramContext.tsx | 13 actions: CRUD days/exercises + move + duplicate + copy |
 | `swapItems` | function | context/ProgramContext.tsx | Generic array swap helper used by all 4 move actions |
 | `useProgram` | hook | context/ProgramContext.tsx | Read program state (via React 19 `use()`) |
 | `useProgramDispatch` | hook | context/ProgramContext.tsx | Dispatch actions (via React 19 `use()`) |
 | `useSaved` | hook | context/ProgramContext.tsx | Boolean — true briefly after auto-save |
-| `ThemeProvider` | component | context/ThemeContext.tsx | Theme state + `data-theme` attribute sync, memoized value |
-| `useTheme` | hook | context/ThemeContext.tsx | `{ theme, toggleTheme, setTheme }` |
+| `ThemeProvider` | component | context/ThemeContext.tsx | Theme mode (auto/dark-gym/polynesian) + resolved theme + `data-theme` sync |
+| `useTheme` | hook | context/ThemeContext.tsx | `{ theme: Theme, mode: ThemeMode, setMode }` |
+| `ThemeMode` | type | context/ThemeContext.tsx | `'auto' \| 'dark-gym' \| 'polynesian'` — persisted to localStorage |
+| `exerciseTemplates` | const | data/exerciseTemplates.ts | 18 presets: 7 mobility, 4 conditioning, 8 gym |
+| `ExerciseTemplate` | interface | data/exerciseTemplates.ts | name, sets, reps, notes?, category |
 | `ToastProvider` | component | context/ToastContext.tsx | Toast queue with auto-dismiss, action buttons, variants |
 | `useToast` | hook | context/ToastContext.tsx | `{ showToast, dismissToast }` |
 | `DayCard` | component | components/DayCard.tsx | Day list item with session badge, popover actions menu |
@@ -187,7 +190,12 @@ npm run preview   # Preview production build
 - **GitHub Pages**: `base` in vite.config.ts reads `BASE_URL` env var for deployment path.
 - **iOS zoom**: All text inputs forced to `font-size: 16px !important` to prevent auto-zoom on iOS Safari.
 - **Mobility images**: 7 SVGs in `public/exercises/`, referenced by `Exercise.image` field. Only mobility exercises have images.
-- **Theme switching**: `data-theme` attribute on `document.documentElement`. CSS custom properties cascade. ThemeContext value is memoized.
+- **Theme switching**: `data-theme` attribute on `document.documentElement`. Three modes: auto (follows OS `prefers-color-scheme`), dark-gym, polynesian. Mode persisted to localStorage; resolved theme applied to DOM.
+- **View Transitions**: TanStack Router `defaultViewTransition: true` in `App.tsx`. CSS in `global.css` with `prefers-reduced-motion` fallback.
+- **Session type theming**: `--color-accent-gym/dance/cardio/rest` CSS vars in both theme files. Used by session badges in DayCard and day detail.
+- **Exercise templates**: 18 presets in `data/exerciseTemplates.ts`. Picker shown in ExerciseForm when adding new exercises (not editing).
+- **Day notes**: Optional `notes?: string` on Day interface. Shown below session badge in display mode, textarea in edit mode.
+- **Keyboard shortcuts**: `N` key opens Add Exercise modal on day detail page (skips when input/textarea focused). Hint shown on desktop only.
 - **Export filename**: `training-program-YYYY-MM-DD.json` (not "aito" — legacy naming).
 - **Import validation**: Runtime type guards in `utils/import.ts` — validates full Program → Day → Exercise shape. Also used by `loadProgram()` for safe localStorage reads.
 - **Desktop breakpoint**: Nav moves to top at `768px+`, but mobile is the primary target.

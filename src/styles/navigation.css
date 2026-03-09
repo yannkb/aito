@@ -66,13 +66,14 @@
   font-weight: 600;
   color: var(--color-success);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   pointer-events: none;
   letter-spacing: 0.02em;
 }
 
 .saved-indicator.saved-visible {
   opacity: 1;
+  transition: opacity 0.15s ease;
 }
 
 .app-content {

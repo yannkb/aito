@@ -6,8 +6,8 @@ export function saveProgram(program: Program): void {
   try {
     const serialized = JSON.stringify(program);
     localStorage.setItem(STORAGE_KEYS.PROGRAM, serialized);
-  } catch (error) {
-    console.error('Failed to save program to localStorage:', error);
+  } catch {
+    // localStorage may be full or unavailable — fail silently
   }
 }
 
@@ -19,12 +19,10 @@ export function loadProgram(): Program | null {
     }
     const parsed: unknown = JSON.parse(serialized);
     if (!isValidProgram(parsed)) {
-      console.error('Invalid program data in localStorage');
       return null;
     }
     return parsed;
-  } catch (error) {
-    console.error('Failed to load program from localStorage:', error);
+  } catch {
     return null;
   }
 }

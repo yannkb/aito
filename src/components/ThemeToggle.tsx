@@ -14,6 +14,10 @@ const OPTIONS: SegmentOption[] = [
   { mode: 'polynesian', label: 'Polynesian', emoji: '🌺' },
 ]
 
+function getSystemLabel(): string {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Dark' : 'Light'
+}
+
 export function ThemeToggle() {
   const { mode, setMode } = useTheme()
 
@@ -28,7 +32,9 @@ export function ThemeToggle() {
           aria-label={`${option.label} theme`}
         >
           <span className={styles.emoji}>{option.emoji}</span>
-          <span className={styles.label}>{option.label}</span>
+          <span className={styles.label}>
+            {option.mode === 'auto' ? `Auto (${getSystemLabel()})` : option.label}
+          </span>
         </button>
       ))}
     </div>

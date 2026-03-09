@@ -26,12 +26,11 @@ export function Popover({ items, trigger, align = 'right' }: PopoverProps) {
 
   const close = useCallback(() => {
     setClosing(true)
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       setOpen(false)
       setClosing(false)
       setCoords(null)
     }, 120)
-    return () => clearTimeout(timer)
   }, [])
 
   const toggle = () => {
