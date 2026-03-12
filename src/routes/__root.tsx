@@ -58,6 +58,7 @@ function RootComponent() {
   return (
     <div className="app-root" data-theme={theme}>
       <title>{pageTitle}</title>
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <OfflineIndicator />
 
       <header className="app-header">
@@ -67,9 +68,9 @@ function RootComponent() {
         </span>
       </header>
 
-      <div className="app-content">
+      <main id="main-content" className="app-content">
         <Outlet />
-      </div>
+      </main>
 
       <PWAUpdatePrompt />
 

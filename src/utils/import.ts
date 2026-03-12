@@ -7,8 +7,13 @@ function isValidExercise(exercise: unknown): exercise is Exercise {
   return (
     typeof ex.id === 'string' &&
     typeof ex.name === 'string' &&
+    ex.name !== '' &&
     typeof ex.sets === 'number' &&
+    ex.sets > 0 &&
+    ex.sets <= 999 &&
+    Number.isInteger(ex.sets) &&
     typeof ex.reps === 'string' &&
+    ex.reps !== '' &&
     (ex.notes === undefined || typeof ex.notes === 'string') &&
     (ex.image === undefined || typeof ex.image === 'string')
   )

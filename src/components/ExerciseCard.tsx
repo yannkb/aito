@@ -21,7 +21,7 @@ export function ExerciseCard({
   onMoveUp,
   onMoveDown,
   onDelete,
-}: ExerciseCardProps) {
+}: ExerciseCardProps): React.JSX.Element {
   return (
     <div className={styles.exerciseCard} data-testid="exercise-card">
       <div className={styles.exerciseIndex}>{index + 1}</div>

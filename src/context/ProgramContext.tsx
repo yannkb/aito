@@ -13,7 +13,7 @@ import { defaultProgram } from '../data/defaultProgram';
 import { saveProgram, loadProgram } from '../utils/storage';
 import { generateId } from '../utils/id';
 
-type ProgramAction =
+export type ProgramAction =
   | { type: 'LOAD_PROGRAM'; payload: Program }
   | { type: 'ADD_DAY'; payload: Day }
   | {
@@ -47,7 +47,7 @@ type ProgramAction =
   | { type: 'DUPLICATE_DAY'; payload: { dayId: string } }
   | { type: 'COPY_EXERCISES_FROM_DAY'; payload: { targetDayId: string; sourceDayId: string } };
 
-function swapItems<T>(array: T[], index: number, direction: 'up' | 'down'): T[] | null {
+export function swapItems<T>(array: T[], index: number, direction: 'up' | 'down'): T[] | null {
   const targetIndex = direction === 'up' ? index - 1 : index + 1
   if (targetIndex < 0 || targetIndex >= array.length) return null
   const result = [...array];
@@ -55,7 +55,7 @@ function swapItems<T>(array: T[], index: number, direction: 'up' | 'down'): T[] 
   return result
 }
 
-function programReducer(state: Program, action: ProgramAction): Program {
+export function programReducer(state: Program, action: ProgramAction): Program {
   switch (action.type) {
     case 'LOAD_PROGRAM':
       return action.payload;
@@ -254,6 +254,9 @@ export function ProgramProvider({ children }: { children: ReactNode }) {
       if (saveTimeoutRef.current !== null) {
         clearTimeout(saveTimeoutRef.current);
       }
+      if (savedTimeoutRef.current !== null) {
+        clearTimeout(savedTimeoutRef.current);
+      }
     };
   }, [program]);
 
@@ -268,7 +271,7 @@ export function ProgramProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useProgram() {
+export function useProgram(): Program {
   const context = use(ProgramContext);
   if (context === undefined) {
     throw new Error('useProgram must be used within a ProgramProvider');
@@ -276,7 +279,7 @@ export function useProgram() {
   return context;
 }
 
-export function useProgramDispatch() {
+export function useProgramDispatch(): React.Dispatch<ProgramAction> {
   const context = use(ProgramDispatchContext);
   if (context === undefined) {
     throw new Error('useProgramDispatch must be used within a ProgramProvider');
@@ -284,6 +287,6 @@ export function useProgramDispatch() {
   return context;
 }
 
-export function useSaved() {
+export function useSaved(): boolean {
   return use(SavedContext);
 }

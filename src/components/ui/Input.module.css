@@ -18,7 +18,7 @@
 
 .input {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--touch-target);
   padding: 0.625rem 0.75rem;
 
   font-family: var(--font-body);
@@ -34,7 +34,7 @@
   -webkit-appearance: none;
   appearance: none;
 
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .input::placeholder {

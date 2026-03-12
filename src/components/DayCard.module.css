@@ -65,7 +65,7 @@
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: box-shadow var(--transition-slow), border-color var(--transition-slow);
 }
 
 .dayCardMain:hover {
@@ -75,7 +75,7 @@
 
 .dayCardMain:active {
   transform: scale(0.985);
-  transition: transform 0.1s ease;
+  transition: transform var(--transition-fast);
 }
 
 /* --- Badge --- */
@@ -198,7 +198,7 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   touch-action: manipulation;
-  transition: color 0.15s ease;
+  transition: color var(--transition-base);
 }
 
 .moreButton:hover {

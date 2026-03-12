@@ -19,7 +19,7 @@
   padding-top: env(safe-area-inset-top);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color var(--transition-modal), border-color var(--transition-modal);
 }
 
 .app-header-title {
@@ -48,7 +48,7 @@
   color: var(--color-text);
   text-decoration: none;
   touch-action: manipulation;
-  transition: background-color 0.15s ease, transform 0.1s ease;
+  transition: background-color var(--transition-base), transform var(--transition-fast);
 }
 
 .app-header-back:hover {
@@ -73,7 +73,7 @@
 
 .saved-indicator.saved-visible {
   opacity: 1;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--transition-base);
 }
 
 .app-content {
@@ -105,13 +105,13 @@
   justify-content: center;
   gap: 0.25rem;
   padding: 0.5rem 1rem;
-  min-height: 44px;
+  min-height: var(--touch-target);
   min-width: 5rem;
   text-decoration: none;
   color: var(--color-text-secondary);
   border-radius: var(--radius);
   touch-action: manipulation;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: color var(--transition-base), background-color var(--transition-base);
 }
 
 .nav-item:hover {
@@ -135,7 +135,7 @@
 .nav-icon {
   width: 24px;
   height: 24px;
-  transition: transform 0.2s ease;
+  transition: transform var(--transition-slow);
 }
 
 .nav-label {

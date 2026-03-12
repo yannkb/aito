@@ -35,7 +35,7 @@ export function DayForm({
   onCancel,
   submitLabel,
   nameWarning,
-}: DayFormProps) {
+}: DayFormProps): React.JSX.Element {
   return (
     <form onSubmit={onSubmit} className={styles.formStack}>
       <Input

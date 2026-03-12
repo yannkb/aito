@@ -3,8 +3,8 @@ import { createContext, use, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { STORAGE_KEYS } from '../constants/storage'
 
-export type ThemeMode = 'auto' | 'dark-gym' | 'polynesian'
-export type Theme = 'dark-gym' | 'polynesian'
+export type ThemeMode = 'auto' | 'dark-gym' | 'polynesian' | 'berserk' | 'dragon-ball'
+export type Theme = 'dark-gym' | 'polynesian' | 'berserk' | 'dragon-ball'
 
 interface ThemeContextType {
   theme: Theme
@@ -20,13 +20,10 @@ function getSystemTheme(): Theme {
     : 'polynesian'
 }
 
-function resolveTheme(mode: ThemeMode): Theme {
-  if (mode === 'auto') return getSystemTheme()
-  return mode
-}
+const VALID_MODES: ReadonlySet<string> = new Set<ThemeMode>(['auto', 'dark-gym', 'polynesian', 'berserk', 'dragon-ball'])
 
 function isValidMode(value: string | null): value is ThemeMode {
-  return value === 'auto' || value === 'dark-gym' || value === 'polynesian'
+  return value !== null && VALID_MODES.has(value)
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -35,10 +32,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return isValidMode(stored) ? stored : 'auto'
   })
 
-  const [resolvedTheme, setResolvedTheme] = useState<Theme>(() => resolveTheme(mode))
+  const [systemTheme, setSystemTheme] = useState<Theme>(getSystemTheme)
+
+  const resolvedTheme = mode === 'auto' ? systemTheme : mode
 
   useEffect(() => {
-    setResolvedTheme(resolveTheme(mode))
     localStorage.setItem(STORAGE_KEYS.THEME, mode)
   }, [mode])
 
@@ -47,18 +45,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [resolvedTheme])
 
   useEffect(() => {
-    if (mode !== 'auto') return
-
     const mql = window.matchMedia('(prefers-color-scheme: dark)')
     const handler = (e: MediaQueryListEvent) => {
-      setResolvedTheme(e.matches ? 'dark-gym' : 'polynesian')
+      setSystemTheme(e.matches ? 'dark-gym' : 'polynesian')
     }
-
     mql.addEventListener('change', handler)
-    return () => {
-      mql.removeEventListener('change', handler)
-    }
-  }, [mode])
+    return () => mql.removeEventListener('change', handler)
+  }, [])
 
   const value = useMemo(
     () => ({ theme: resolvedTheme, mode, setMode: setModeState }),
@@ -68,7 +61,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
-export function useTheme() {
+export function useTheme(): ThemeContextType {
   const context = use(ThemeContext)
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider')

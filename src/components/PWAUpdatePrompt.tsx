@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import styles from './PWAUpdatePrompt.module.css'
 
-export function PWAUpdatePrompt() {
+export function PWAUpdatePrompt(): React.JSX.Element | null {
   const registrationRef = useRef<ServiceWorkerRegistration | null>(null)
   const intervalRef = useRef<number | null>(null)
 

@@ -18,7 +18,7 @@ export function Button({
   className,
   children,
   ...props
-}: ButtonProps) {
+}: ButtonProps): React.JSX.Element {
   const classes = [
     styles.button,
     styles[variant],

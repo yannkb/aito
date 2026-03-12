@@ -13,7 +13,7 @@ export function Input({
   required,
   className,
   ...props
-}: InputProps) {
+}: InputProps): React.JSX.Element {
   const id = useId()
   const errorId = `${id}-error`
 

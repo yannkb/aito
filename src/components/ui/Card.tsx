@@ -15,7 +15,7 @@ export function Card({
   className,
   children,
   ...props
-}: CardProps) {
+}: CardProps): React.JSX.Element {
   const classes = [
     styles.card,
     elevated ? styles.elevated : '',

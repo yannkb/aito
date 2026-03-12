@@ -44,4 +44,10 @@
   --color-accent-cardio-muted: rgba(229, 137, 10, 0.10);
   --color-accent-rest: #8B7355;
   --color-accent-rest-muted: rgba(60, 36, 21, 0.08);
+
+  --touch-target: 44px;
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.15s ease;
+  --transition-slow: 0.2s ease;
+  --transition-modal: 0.3s ease;
 }

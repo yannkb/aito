@@ -10,6 +10,7 @@ import { Button } from '../components/ui/Button'
 import { Modal } from '../components/ui/Modal'
 import { DayCard } from '../components/DayCard'
 import { DayForm } from '../components/DayForm'
+import { WarriorCode } from '../components/WarriorCode'
 import styles from './index.module.css'
 
 export const Route = createRoute({
@@ -149,6 +150,8 @@ function HomeComponent() {
 
   return (
     <div className={styles.page}>
+      <WarriorCode />
+
       <div className={styles.dayList} data-testid="day-list">
         {program.days.map((day, index) => (
           <DayCard

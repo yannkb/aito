@@ -16,7 +16,7 @@ export function IconButton({
   className,
   children,
   ...props
-}: IconButtonProps) {
+}: IconButtonProps): React.JSX.Element {
   const classes = [
     styles.iconButton,
     variant !== 'default' ? styles[variant] : '',

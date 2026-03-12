@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { readFileSync } from 'node:fs'
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'))
+const base = process.env.BASE_URL || '/'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,7 +15,7 @@ export default defineConfig({
   // For user sites (username.github.io): use '/'
   // For project sites (username.github.io/repo-name): use '/repo-name/'
   // Can be overridden via BASE_URL environment variable
-  base: process.env.BASE_URL || '/',
+  base,
   
   plugins: [
     react({
@@ -31,8 +32,8 @@ export default defineConfig({
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: 'standalone',
-        scope: process.env.BASE_URL || '/',
-        start_url: process.env.BASE_URL || '/',
+        scope: base,
+        start_url: base,
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -55,7 +56,42 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // Precache: hashed JS/CSS + HTML + icons + SVGs
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+
+        // Offline SPA fallback — serves index.html for any navigation request
+        navigateFallback: `${base}index.html`,
+        navigateFallbackAllowlist: [/^(?!\/_).*$/],
+
+        cleanupOutdatedCaches: true,
+
+        // Runtime caching for unhashed assets in public/
+        runtimeCaching: [
+          {
+            urlPattern: /\/exercises\/.*\.svg$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'exercise-illustrations',
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /\/(pwa-192x192|pwa-512x512|apple-touch-icon)\.png$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'pwa-icons',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
     }),
   ],

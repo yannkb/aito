@@ -9,7 +9,7 @@
   justify-content: center;
   gap: 0.5rem;
 
-  min-height: 44px;
+  min-height: var(--touch-target);
   padding: 0.625rem 1.25rem;
   border: 2px solid transparent;
   border-radius: var(--radius);
@@ -27,11 +27,11 @@
   touch-action: manipulation;
 
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.1s ease;
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);
 }
 
 .button:active {
@@ -96,7 +96,7 @@
 /* --- Sizes --- */
 
 .sm {
-  min-height: 44px;
+  min-height: var(--touch-target);
   padding: 0.375rem 0.875rem;
   font-size: 0.8125rem;
   border-radius: var(--radius-sm);

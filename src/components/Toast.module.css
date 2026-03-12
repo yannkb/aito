@@ -60,8 +60,8 @@
 
 .action {
   flex-shrink: 0;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -83,8 +83,8 @@
   touch-action: manipulation;
 
   transition:
-    background-color 0.15s ease,
-    transform 0.1s ease;
+    background-color var(--transition-base),
+    transform var(--transition-fast);
 }
 
 .action:hover {

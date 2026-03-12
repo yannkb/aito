@@ -74,7 +74,7 @@
   font-size: 1.25rem;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 .closeButton:hover {

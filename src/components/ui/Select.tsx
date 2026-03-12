@@ -22,7 +22,7 @@ export function Select({
   required,
   className,
   ...props
-}: SelectProps) {
+}: SelectProps): React.JSX.Element {
   const id = useId()
   const errorId = `${id}-error`
 

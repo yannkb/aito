@@ -2,12 +2,14 @@ import type { Program } from '../types/program';
 import { STORAGE_KEYS } from '../constants/storage';
 import { isValidProgram } from './import';
 
-export function saveProgram(program: Program): void {
+export function saveProgram(program: Program): boolean {
   try {
     const serialized = JSON.stringify(program);
     localStorage.setItem(STORAGE_KEYS.PROGRAM, serialized);
-  } catch {
-    // localStorage may be full or unavailable — fail silently
+    return true;
+  } catch (error) {
+    console.error('Failed to save program to localStorage:', error);
+    return false;
   }
 }
 

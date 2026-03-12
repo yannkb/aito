@@ -5,7 +5,7 @@ export function createProgramSnapshot(program: Program): Program {
     ...program,
     days: program.days.map(d => ({
       ...d,
-      exercises: [...d.exercises],
+      exercises: d.exercises.map(ex => ({ ...ex })),
     })),
   }
 }

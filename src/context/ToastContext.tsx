@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, use, useState, useCallback, useRef } from 'react'
+import { createContext, use, useState, useCallback, useMemo, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { Toast } from '../components/Toast'
 import type { ToastData } from '../components/Toast'
@@ -50,15 +50,20 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [clearTimer]
   )
 
+  const contextValue = useMemo(
+    () => ({ showToast, dismissToast }),
+    [showToast, dismissToast]
+  )
+
   return (
-    <ToastContext.Provider value={{ showToast, dismissToast }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
       {toast && <Toast toast={toast} onDismiss={dismissToast} />}
     </ToastContext.Provider>
   )
 }
 
-export function useToast() {
+export function useToast(): ToastContextType {
   const context = use(ToastContext)
   if (!context) {
     throw new Error('useToast must be used within a ToastProvider')

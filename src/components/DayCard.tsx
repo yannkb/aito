@@ -48,7 +48,7 @@ export function DayCard({
   onDelete,
   onMoveUp,
   onMoveDown,
-}: DayCardProps) {
+}: DayCardProps): React.JSX.Element {
   return (
     <Card noPadding interactive={false} className={`${styles.dayCard} ${isToday ? styles.dayCardToday : ''}`} data-testid="day-card" data-today={isToday || undefined}>
       <Link
@@ -57,7 +57,7 @@ export function DayCard({
         className={styles.dayCardMain}
       >
         <div className={`${styles.badge} ${BADGE_STYLES[day.sessionType]}`}>
-          {SESSION_TYPE_ICONS[day.sessionType]}
+           <span aria-hidden="true">{SESSION_TYPE_ICONS[day.sessionType]}</span>
         </div>
         <div className={styles.dayInfo}>
           <div className={styles.dayName}>

@@ -1,0 +1,117 @@
+.warrior {
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--color-primary);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.875rem 1rem 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: var(--touch-target);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.quoteSection {
+  padding: 0.625rem 1rem 0.875rem;
+}
+
+.quoteText {
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.quoteText::before {
+  content: '\201C';
+}
+
+.quoteText::after {
+  content: '\201D';
+}
+
+.quoteAuthor {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin: 0.375rem 0 0;
+}
+
+.toolkitSection {
+  border-top: 1px solid var(--color-border);
+  padding: 0.75rem 1rem 1rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin: 0 0 0.5rem;
+}
+
+.toolkitGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.375rem 1rem;
+}
+
+.toolkitEntry {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.toolkitTrigger {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.habitsSection {
+  border-top: 1px solid var(--color-border);
+  padding: 0.75rem 1rem 1rem;
+}
+
+.habitList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.habit {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.habitIcon {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  width: 1.25rem;
+  text-align: center;
+}
